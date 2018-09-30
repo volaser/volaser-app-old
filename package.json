@@ -8,8 +8,10 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
+    "buffer": "^5.2.1",
     "react": "16.5.0",
     "react-native": "0.57.1",
+    "react-native-ble-plx": "^0.10.0",
     "react-native-elements": "^0.19.1",
     "react-native-vector-icons": "^5.0.0",
     "react-navigation": "^2.16.0"
