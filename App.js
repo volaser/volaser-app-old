@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { createMaterialTopTabNavigator } from "react-navigation";
 
 import Measurements from "./screens/measure";
-import DataTable from "./screens/data_table";
+import DataExplorer from "./screens/data";
 import Settings from "./screens/settings";
 
 export default class App extends React.Component {
@@ -15,7 +15,7 @@ export default class App extends React.Component {
 const RootStack = createMaterialTopTabNavigator(
   {
     Measure: Measurements,
-    DataTable: DataTable,
+    DataExplorer: DataExplorer,
     Settings: Settings
   },
   {

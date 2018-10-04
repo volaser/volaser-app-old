@@ -60,7 +60,7 @@ export default class Laser extends React.Component {
   scanAndConnect() {
     this.manager.startDeviceScan(null, null, (error, device) => {
       this.info("Scanning...");
-      console.log(device.name);
+      // console.log(device.name);
       if (error) {
         this.error(error.message);
       } else {
