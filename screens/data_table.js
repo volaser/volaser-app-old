@@ -1,24 +1,28 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Icon, List, ListItem } from "react-native-elements";
-
-const list = require("../data.json");
+import { StyleSheet, View, ScrollView } from "react-native";
+import { List, ListItem } from "react-native-elements";
 
 export default class DataTable extends React.Component {
   render() {
+    data = this.props.screenProps.data;
+    if (data == null) {
+      data = [];
+    }
     const list_obj = (
       <List>
-        {list.map(item => (
+        {data.map((item, key) => (
           <ListItem
-            key={item.name}
+            key={key}
             title={item.name}
-            subtitle={item.time}
-            onPress={() => this.props.navigation.navigate("DataCard")}
+            subtitle={Date(item.time)}
+            onPress={() =>
+              this.props.navigation.navigate("DataCard", { ...item, key: key })
+            }
           />
         ))}
       </List>
     );
-    return <View style={styles.container}>{list_obj}</View>;
+    return <ScrollView style={styles.container}>{list_obj}</ScrollView>;
   }
 }
 

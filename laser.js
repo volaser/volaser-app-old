@@ -1,7 +1,8 @@
 import React from "react";
-import { Platform, View, Text } from "react-native";
+import { Platform, View } from "react-native";
 import { BleManager } from "react-native-ble-plx";
-import { Icon, Button } from "react-native-elements";
+import { Button, Text } from "react-native-elements";
+
 import { Buffer } from "buffer";
 
 export default class Laser extends React.Component {
@@ -109,7 +110,7 @@ export default class Laser extends React.Component {
           backgroundColor="#3a84fc"
           onPress={() => this.sendBleMessage("press")}
         />
-        <Text>{this.state.info}</Text>
+        <Text>Info: {this.state.info}</Text>
       </View>
     );
   }
