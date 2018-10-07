@@ -1,6 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Icon } from "react-native-elements";
+import { StyleSheet, View, Share } from "react-native";
+import { Icon, Button } from "react-native-elements";
+
+import store from "./data_store";
 
 export default class Settings extends React.Component {
   static navigationOptions = {
@@ -17,7 +19,15 @@ export default class Settings extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}> Settings </Text>
+        <Button
+          large
+          rounded
+          title="Export Data"
+          backgroundColor="#337799"
+          onPress={() =>
+            Share.share({ message: JSON.stringify(store.list), title: "title" })
+          }
+        />
       </View>
     );
   }
