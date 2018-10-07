@@ -7,12 +7,15 @@ import DataExplorer from "./screens/data";
 import Settings from "./screens/settings";
 
 export default class App extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+  }
   render() {
-    return <RootStack />;
+    return <RootTabsNavigator />;
   }
 }
 
-const RootStack = createMaterialTopTabNavigator(
+const RootTabsNavigator = createMaterialTopTabNavigator(
   {
     Measure: Measurements,
     DataExplorer: DataExplorer,

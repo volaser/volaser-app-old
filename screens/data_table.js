@@ -1,22 +1,30 @@
 import React from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import { List, ListItem } from "react-native-elements";
+import { observer } from "mobx-react";
 
+import store from "./data_store";
+
+@observer
 export default class DataTable extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
-    data = this.props.screenProps.data;
-    if (data == null) {
-      data = [];
-    }
+    console.log("store: " + store.list);
+    data = store.list;
     const list_obj = (
       <List>
-        {data.map((item, key) => (
+        {data.map((elem, key) => (
           <ListItem
             key={key}
-            title={item.name}
-            subtitle={Date(item.time)}
+            title={elem.item.name}
+            subtitle={Date(elem.item.time)}
             onPress={() =>
-              this.props.navigation.navigate("DataCard", { ...item, key: key })
+              this.props.navigation.navigate("DataCard", {
+                ...elem.item,
+                index: elem.index
+              })
             }
           />
         ))}

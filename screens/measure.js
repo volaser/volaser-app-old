@@ -2,7 +2,8 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Icon, Button, FormInput } from "react-native-elements";
 
-import store from "react-native-simple-store";
+// import store from "react-native-simple-store";
+import store from "./data_store";
 
 import Laser from "../laser";
 
@@ -31,7 +32,7 @@ export default class Measurements extends React.Component {
         console.log("date: " + Date(position.timestamp));
         console.log("lat: " + position.coords.latitude);
         console.log("lat: " + position.coords.longitude);
-        store.push("data", {
+        store.push({
           name: this.state.name,
           location: position.coords,
           time: position.timestamp
@@ -47,6 +48,14 @@ export default class Measurements extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <FormInput
+          placeholder="Name"
+          containerStyle={styles.forminput}
+          onFocus={event => this.setState({ name: "" })}
+          onChangeText={event => {
+            this.setState({ name: event });
+          }}
+        />
         <Laser />
         <Button
           large
@@ -55,13 +64,6 @@ export default class Measurements extends React.Component {
           icon={{ name: "build" }}
           backgroundColor="#ca343c"
           onPress={() => this.getGPS()}
-        />
-        <FormInput
-          placeholder="Name"
-          containerStyle={styles.forminput}
-          onChangeText={event => {
-            this.setState({ name: event });
-          }}
         />
       </View>
     );

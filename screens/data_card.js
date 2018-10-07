@@ -2,28 +2,25 @@ import React from "react";
 import { View } from "react-native";
 import { Text, Button } from "react-native-elements";
 
-import store from "react-native-simple-store";
+import store from "./data_store";
 
 export default class DataCard extends React.Component {
-  delete(id) {
-    store.get("data").then(result => {
-      result.splice(id, 1);
-      store.save("data", result);
-    });
-    this.props.navigation.navigate("DataTable", { deletedId: id });
+  delete(index) {
+    store.delete({ index });
+    this.props.navigation.navigate("DataTable");
   }
 
   render() {
     const { navigation } = this.props;
     const name = navigation.getParam("name", "<Name>");
-    const id = navigation.getParam("key", "<ID>");
+    const index = navigation.getParam("index", "<INDEX>");
     const time = navigation.getParam("time", 0);
     const location = navigation.getParam("location", "<Location>");
     return (
       <View>
         <Text h1>
           {" "}
-          {id}:{name}{" "}
+          {index}:{name}{" "}
         </Text>
         <Text h3>{Date(time)}</Text>
         <Text h4> {location.latitude} </Text>
@@ -34,7 +31,7 @@ export default class DataCard extends React.Component {
           title="Delete"
           icon={{ name: "delete" }}
           backgroundColor="#ca343c"
-          onPress={() => this.delete(id)}
+          onPress={() => this.delete(index)}
         />
       </View>
     );
