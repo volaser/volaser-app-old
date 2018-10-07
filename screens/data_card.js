@@ -16,15 +16,16 @@ export default class DataCard extends React.Component {
     const index = navigation.getParam("index", "<INDEX>");
     const time = navigation.getParam("time", 0);
     const location = navigation.getParam("location", "<Location>");
+    const range = navigation.getParam("range", "<RANGE>");
     return (
       <View>
         <Text h1>
-          {" "}
           {index}:{name}{" "}
         </Text>
         <Text h3>{Date(time)}</Text>
         <Text h4> {location.latitude} </Text>
         <Text h4> {location.longitude} </Text>
+        <Text h3> Range: {range} </Text>
         <Button
           large
           rounded

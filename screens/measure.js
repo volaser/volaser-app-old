@@ -41,21 +41,13 @@ export default class Measurements extends React.Component {
       error => {
         console.log("error: " + error.message);
       },
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      { enableHighAccuracy: true, timeout: 2000 }
     );
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <FormInput
-          placeholder="Name"
-          containerStyle={styles.forminput}
-          onFocus={event => this.setState({ name: "" })}
-          onChangeText={event => {
-            this.setState({ name: event });
-          }}
-        />
         <Laser />
         <Button
           large
@@ -81,8 +73,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "center",
     margin: 10
-  },
-  forminput: {
-    borderWidth: 1
   }
 });
