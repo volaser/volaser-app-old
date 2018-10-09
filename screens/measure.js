@@ -32,11 +32,6 @@ export default class Measurements extends React.Component {
         console.log("date: " + Date(position.timestamp));
         console.log("lat: " + position.coords.latitude);
         console.log("lat: " + position.coords.longitude);
-        store.push({
-          name: this.state.name,
-          location: position.coords,
-          time: position.timestamp
-        });
       },
       error => {
         console.log("error: " + error.message);

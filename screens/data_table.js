@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, ScrollView } from "react-native";
 import { List, ListItem } from "react-native-elements";
 import { observer } from "mobx-react";
+import dateFormat from "dateformat";
 
 import store from "./data_store";
 
@@ -11,7 +12,6 @@ export default class DataTable extends React.Component {
     super(props);
   }
   render() {
-    console.log("store: " + store.list);
     data = store.list;
     const list_obj = (
       <List>
@@ -19,7 +19,12 @@ export default class DataTable extends React.Component {
           <ListItem
             key={key}
             title={elem.item.name}
-            subtitle={Date(elem.item.time)}
+            subtitle={
+              dateFormat(elem.item.time, "mmm d, HH:MM") +
+              "  " +
+              elem.item.range +
+              " (m)"
+            }
             onPress={() =>
               this.props.navigation.navigate("DataCard", {
                 ...elem.item,

@@ -25,8 +25,7 @@ class Store {
     this.list = this.list.filter(l => {
       return l.index !== item.index;
     });
-    console.log(this.list);
-    asyncStore.save("data", { list: this.list });
+    asyncStore.save("data", { list: this.list, index: index });
   }
 
   @action
@@ -39,6 +38,7 @@ class Store {
       } else {
         this.list = asyncStorage.list;
         index = asyncStorage.index;
+        console.log({ list: this.list, index: index });
       }
     } catch (err) {
       console.log("Could not refresh:" + err);

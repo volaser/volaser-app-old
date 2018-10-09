@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { Text, Button } from "react-native-elements";
+import dateFormat from "dateformat";
 
 import store from "./data_store";
 
@@ -22,7 +23,7 @@ export default class DataCard extends React.Component {
         <Text h1>
           {index}:{name}{" "}
         </Text>
-        <Text h3>{Date(time)}</Text>
+        <Text h3>{dateFormat(time)}</Text>
         <Text h4> {location.latitude} </Text>
         <Text h4> {location.longitude} </Text>
         <Text h3> Range: {range} </Text>

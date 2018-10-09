@@ -40,11 +40,16 @@ export default class Laser extends React.Component {
 
   sendBleMessage = async message => {
     if (this.state.device !== null) {
-      await this.state.device.writeCharacteristicWithResponseForService(
-        "4fafc201-1fb5-459e-8fcc-c5c9c331914b",
-        "beb5483e-36e1-4688-b7f5-ea07361b26a8",
-        Buffer.from("hello").toString("base64")
-      );
+      try {
+        const response = await this.state.device.writeCharacteristicWithResponseForService(
+          "4fafc201-1fb5-459e-8fcc-c5c9c331914b",
+          "beb5483e-36e1-4688-b7f5-ea07361b26a8",
+          Buffer.from("H").toString("base64")
+        );
+      } catch (error) {
+        this.error(error);
+      }
+
       const characteristic = await this.state.device.readCharacteristicForService(
         "4fafc201-1fb5-459e-8fcc-c5c9c331914b",
         "a812aeed-78d0-474a-b9b1-20a8a1f95463"
@@ -58,22 +63,24 @@ export default class Laser extends React.Component {
   };
 
   measureRange = async () => {
-    const range = await this.sendBleMessage("press");
-    console.log("range: " + range);
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        store.push({
-          name: this.state.name,
-          location: position.coords,
-          time: position.timestamp,
-          range: range
-        });
-      },
-      error => {
-        console.log("error: " + error.message);
-      },
-      { enableHighAccuracy: true, timeout: 2000 }
-    );
+    if (this.state.device !== null) {
+      const range = await this.sendBleMessage("press");
+      console.log("range: " + range);
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          store.push({
+            name: this.state.name,
+            location: position.coords,
+            time: Date(),
+            range: range
+          });
+        },
+        error => {
+          console.log("error: " + error.message);
+        },
+        { enableHighAccuracy: true, timeout: 2000 }
+      );
+    }
   };
 
   scanAndConnect() {
