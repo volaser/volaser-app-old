@@ -2,9 +2,9 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { createMaterialTopTabNavigator } from "react-navigation";
 
-import Measurements from "./screens/measure";
-import DataExplorer from "./screens/data";
-import Settings from "./screens/settings";
+import Measurements from "./measure";
+import Data from "./data";
+import Settings from "./settings";
 
 export default class App extends React.Component {
   constructor(props, context) {
@@ -18,11 +18,17 @@ export default class App extends React.Component {
 const RootTabsNavigator = createMaterialTopTabNavigator(
   {
     Measure: Measurements,
-    DataExplorer: DataExplorer,
+    Data: Data,
     Settings: Settings
   },
   {
     initialRouteName: "Measure",
+    navigationOptions: {
+      headerTitleStyle: {
+        fontWeight: "bold",
+        color: "#fff"
+      }
+    },
     tabBarPosition: "bottom",
     tabBarOptions: {
       showIcon: true

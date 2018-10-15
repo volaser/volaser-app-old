@@ -1,9 +1,13 @@
 import React from "react";
 import { StyleSheet, View, Share } from "react-native";
-import { Icon, Button } from "react-native-elements";
+import { Icon, Button, Text } from "react-native-elements";
+import { observer } from "mobx-react";
 
 import store from "./data_store";
+import laser from "./laser";
+import motor from "./motor";
 
+@observer
 export default class Settings extends React.Component {
   static navigationOptions = {
     title: "Settings",
@@ -19,6 +23,28 @@ export default class Settings extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <Text>{laser.statusMsg}</Text>
+        <Text>{motor.statusMsg}</Text>
+        <Button
+          large
+          raised
+          backgroundColor="#38f"
+          title="Up"
+          icon={{ name: "arrow-upward" }}
+          onPress={() => {}}
+          onPressIn={() => motor.up()}
+          onPressOut={() => motor.brake()}
+        />
+        <Button
+          large
+          raised
+          backgroundColor="#38f"
+          title="Down"
+          icon={{ name: "arrow-downward" }}
+          onPress={() => {}}
+          onPressIn={() => motor.down()}
+          onPressOut={() => motor.brake()}
+        />
         <Button
           large
           rounded

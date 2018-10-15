@@ -4,7 +4,7 @@ import { Icon } from "react-native-elements";
 import DataTable from "./data_table";
 import DataCard from "./data_card";
 
-export default class DataExplorer extends React.Component {
+export default class Data extends React.Component {
   static navigationOptions = {
     title: "Data",
     tabBarIcon: ({ tintColor }) => (
@@ -35,10 +35,6 @@ const DataStack = createStackNavigator({
     })
   },
   DataCard: {
-    screen: DataCard,
-    navigationOptions: () => ({
-      title: "Data",
-      headerBackTitle: null
-    })
+    screen: DataCard
   }
 });
