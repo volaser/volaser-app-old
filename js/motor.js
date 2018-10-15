@@ -15,7 +15,7 @@ class Motor {
     this.manager = new BleManager();
 
     if (Platform.OS === "ios") {
-      this.manager.onStateChange(sate => {
+      this.manager.onStateChange(state => {
         if (state === "PoweredOn") this.scanAndConnect();
       });
     } else {

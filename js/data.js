@@ -30,8 +30,7 @@ const DataStack = createStackNavigator({
   DataTable: {
     screen: DataTable,
     navigationOptions: () => ({
-      title: "Data",
-      headerBackTitle: null
+      title: "Data"
     })
   },
   DataCard: {

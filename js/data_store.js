@@ -38,10 +38,16 @@ class Store {
       } else {
         this.list = asyncStorage.list;
         index = asyncStorage.index;
+        if (this.list == null) {
+          this.list = [];
+          index = 0;
+        }
         console.log({ list: this.list, index: index });
       }
     } catch (err) {
       console.log("Could not refresh:" + err);
+      this.list = [];
+      index = 0;
     }
   };
 }
