@@ -1,5 +1,28 @@
 apply plugin: "com.android.application"
 
+ext.versionMajor = 0
+ext.versionMinor = 1
+ext.versionPatch = 1
+ext.versionClassifier = null
+ext.isSnapshot = true
+
+private Integer generateVersionCode() {
+	return rootProject.ext.minSdkVersion * 10000000 + ext.versionMajor * 10000 + ext.versionMinor * 100 + ext.versionPatch
+}
+
+private String generateVersionName() {
+	String versionName = "${ext.versionMajor}.${ext.versionMinor}.${ext.versionPatch}"
+	if (ext.versionClassifier == null && ext.isSnapshot) {
+		ext.versionClassifier = "SNAPSHOT"
+	}
+
+	if (ext.versionClassifier != null) {
+		versionName += "-" + ext.versionClassifier
+	}
+	return versionName;
+}
+
+
 import com.android.build.OutputFile
 
 /**
@@ -101,8 +124,8 @@ android {
         applicationId "com.volaser"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+		versionCode generateVersionCode()
+		versionName generateVersionName()
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -154,7 +177,7 @@ configurations.all {
 }
 
 dependencies {
-    compile project(':react-native-svg')
+    implementation project(':react-native-svg')
     implementation project(':react-native-maps')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-ble-plx')

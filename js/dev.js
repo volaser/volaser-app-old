@@ -5,6 +5,7 @@ import { observer } from "mobx-react";
 
 import laser from "./laser";
 import motor from "./motor";
+
 @observer
 export default class Developer extends React.Component {
   static navigationOptions = {
@@ -34,16 +35,16 @@ export default class Developer extends React.Component {
           <Button
             title="Measure H"
             icon={{ name: "arrow-forward" }}
-            backgroundColor={laser.ready ? "#3a84fc" : "#555555"}
+            backgroundColor={laser.ready ? "#3a84fc" : "#999"}
             onPress={async () => {
               const range = await laser.measureH();
-              this.log(`Vertical Range: ${range} (m)`);
+              this.log(`Horizontal Range: ${range} (m)`);
             }}
           />
           <Button
             title="Measure V"
             icon={{ name: "arrow-downward" }}
-            backgroundColor={laser.ready ? "#3a84fc" : "#555555"}
+            backgroundColor={laser.ready ? "#3a84fc" : "#999"}
             onPress={async () => {
               const range = await laser.measureV();
               this.log(`Vertical Range: ${range} (m)`);
@@ -54,17 +55,36 @@ export default class Developer extends React.Component {
           <Button
             title="Measure Area"
             icon={{ name: "album" }}
-            backgroundColor={laser.ready ? "#3aac64" : "#555555"}
+            backgroundColor={laser.ready ? "#3aac64" : "#999"}
             onPress={async () => {
-              const area = await laser.measureArea();
+              const area = await laser.measureOutline();
               this.log(`Area: ${area}`);
             }}
           />
         </View>
         <View style={styles.row}>
           <Button
+            backgroundColor={motor.ready ? "#38f" : "#999"}
+            title="Up"
+            icon={{ name: "keyboard-arrow-up" }}
+            onPress={() => {}}
+            onPressIn={() => motor.up()}
+            onPressOut={() => motor.brake()}
+          />
+          <Button
+            backgroundColor={motor.ready ? "#38f" : "#999"}
+            title="Down"
+            icon={{ name: "keyboard-arrow-down" }}
+            onPress={() => {}}
+            onPressIn={() => motor.down()}
+            onPressOut={() => motor.brake()}
+          />
+        </View>
+        <View style={styles.row}>
+          <Button
             title="Force Reconnect"
-            backgroundColor="#355555"
+            icon={{ name: "bluetooth" }}
+            backgroundColor="#b42"
             onPress={() => laser.scanAndConnect()}
           />
         </View>

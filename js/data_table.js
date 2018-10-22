@@ -6,6 +6,9 @@ import dateFormat from "dateformat";
 
 import store from "./data_store";
 import { calculateArea } from "./calculate";
+
+import { probeOffset } from "./measure";
+
 @observer
 export default class DataTable extends React.Component {
   static navigationOptions = () => {
@@ -36,7 +39,8 @@ export default class DataTable extends React.Component {
             key={key}
             title={elem.item.name}
             subtitle={`${dateFormat(elem.item.time, "mmm d, HH:MM")},  ${(
-              calculateArea(elem.item.outline) * elem.item.depth
+              calculateArea(elem.item.outline) *
+              (elem.item.probeHeight - elem.item.probeDepth - probeOffset)
             ).toFixed(3)} m³`}
             onPress={() =>
               this.props.navigation.navigate("DataCard", {

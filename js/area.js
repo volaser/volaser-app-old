@@ -22,7 +22,6 @@ export default class Area extends React.Component {
       >
         <Polygon
           points={this.getAreaOutline()}
-          //   points={this.getAreaOutline()}
           fill="#ccc"
           stroke="black"
           strokeWidth="0"
@@ -31,7 +30,7 @@ export default class Area extends React.Component {
           points={`${boxRadius},${boxRadius} -${boxRadius},${boxRadius} -${boxRadius},-${boxRadius}, ${boxRadius},-${boxRadius} ${boxRadius},${boxRadius}`}
           fill="none"
           stroke="gray"
-          strokeWidth="0.0"
+          strokeWidth="0"
         />
       </Svg>
     );
