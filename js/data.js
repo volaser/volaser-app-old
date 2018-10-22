@@ -28,10 +28,7 @@ export default class Data extends React.Component {
 
 const DataStack = createStackNavigator({
   DataTable: {
-    screen: DataTable,
-    navigationOptions: () => ({
-      title: "Data"
-    })
+    screen: DataTable
   },
   DataCard: {
     screen: DataCard

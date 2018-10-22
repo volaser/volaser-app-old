@@ -1,5 +1,8 @@
+import { Share } from "react-native";
 import { action, observable } from "mobx";
 import asyncStore from "react-native-simple-store";
+
+import haversine from "haversine-distance";
 
 let index = 0;
 
@@ -50,6 +53,37 @@ class Store {
       index = 0;
     }
   };
+
+  collect() {
+    return this.list.reduce((accum, elem) => {
+      if (
+        accum.some(
+          accum_elem =>
+            haversine(accum_elem.item.location, elem.item.location) < 100
+        )
+      ) {
+      } else {
+        accum.push(elem);
+      }
+
+      return accum;
+    }, []);
+  }
+
+  export(index = null) {
+    if (index != null) {
+      const item = this.list.find(item => item.index == index);
+      Share.share({
+        message: JSON.stringify(item.item),
+        title: `Volaser Data: ${item.item.name}`
+      });
+    } else {
+      Share.share({
+        message: JSON.stringify(this.list),
+        title: "All Volaser Data"
+      });
+    }
+  }
 }
 
 const store = new Store();

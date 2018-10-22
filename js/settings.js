@@ -1,9 +1,8 @@
 import React from "react";
-import { StyleSheet, View, Share } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Icon, Button, Text } from "react-native-elements";
 import { observer } from "mobx-react";
 
-import store from "./data_store";
 import laser from "./laser";
 import motor from "./motor";
 
@@ -45,15 +44,7 @@ export default class Settings extends React.Component {
           onPressIn={() => motor.down()}
           onPressOut={() => motor.brake()}
         />
-        <Button
-          large
-          rounded
-          title="Export Data"
-          backgroundColor="#337799"
-          onPress={() =>
-            Share.share({ message: JSON.stringify(store.list), title: "title" })
-          }
-        />
+        <Text>Eawag 2018</Text>
       </View>
     );
   }

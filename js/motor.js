@@ -1,4 +1,4 @@
-import { Platform, View } from "react-native";
+import { Platform, PermissionsAndroid } from "react-native";
 import { observable } from "mobx";
 import { BleManager } from "react-native-ble-plx";
 import { Buffer } from "buffer";
@@ -9,11 +9,12 @@ const RX_UUID = "1dd9685e-bd8f-416b-bca2-0b0591709e64";
 class Motor {
   @observable
   statusMsg = "";
+  @observable
+  ready = false;
   device = null;
 
   constructor() {
     this.manager = new BleManager();
-
     if (Platform.OS === "ios") {
       this.manager.onStateChange(state => {
         if (state === "PoweredOn") this.scanAndConnect();
@@ -33,8 +34,30 @@ class Motor {
     this.statusMsg = `Error: ${message}`;
   }
 
+  requestPermissions = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        {
+          title: "Location Permission",
+          message:
+            "Volaser needs access to your Location in order to scan for Bluetooth devices."
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("Location permissions granted");
+      } else {
+        console.log("Location permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
   scanAndConnect = async () => {
-    this.info("Connecting to Winch");
+    this.info("Requesting permissions to scan");
+    await this.requestPermissions();
+    this.info("Looking for Winch");
     this.manager.startDeviceScan(null, null, async (error, device) => {
       if (error) {
         this.error(error.message);
@@ -47,6 +70,7 @@ class Motor {
             this.info("Discovering services and characteristics");
             this.device = await device.discoverAllServicesAndCharacteristics();
             this.info("Listening...");
+            this.ready = true;
           } catch (error) {
             this.error(error);
           }
@@ -65,6 +89,7 @@ class Motor {
         );
       } catch (error) {
         this.error(error);
+        this.ready = false;
       }
     }
   };

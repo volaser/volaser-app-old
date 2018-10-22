@@ -1,4 +1,4 @@
-import { Platform } from "react-native";
+import { Platform, PermissionsAndroid } from "react-native";
 import { BleManager } from "react-native-ble-plx";
 
 import { Buffer } from "buffer";
@@ -39,8 +39,29 @@ class Laser {
     this.statusMsg = `Error: ${message}`;
   }
 
+  requestPermissions = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        {
+          title: "Location Permission",
+          message:
+            "Volaser needs access to your Location in order to scan for Bluetooth devices."
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("Location permissions granted");
+      } else {
+        console.log("Location permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
   scanAndConnect = async () => {
-    this.info("Connecting to Laser");
+    await this.requestPermissions();
+    this.info("Looking for Laser");
     this.manager.startDeviceScan(null, null, async (error, device) => {
       if (error) {
         this.error(error.message);
@@ -78,63 +99,38 @@ class Laser {
         return Buffer.from(characteristic.value, "base64").toString("ascii");
       } catch (error) {
         this.error(error);
+        this.ready = false;
       }
     }
   };
 
-  measureRange = async () => {
+  measureH = async () => {
     const range = await this.sendBleMessage("H");
     console.log(range);
-    return range;
+    return Number(range);
   };
 
-  measureArea = async () => {
+  measureV = async () => {
+    const range = await this.sendBleMessage("V");
+    console.log(range);
+    return Number(range);
+  };
+
+  measureOutline = async () => {
     if (this.device !== null) {
-      angles = [
-        0,
-        18,
-        36,
-        54,
-        72,
-        90,
-        108,
-        126,
-        144,
-        162,
-        180,
-        198,
-        216,
-        234,
-        252,
-        270,
-        288,
-        306,
-        324,
-        342,
-        0
-      ];
+      N = 40;
+      // const l = 4 + 1;
+      angles = Array.from({ length: N + 1 }, (x, i) => i * (360 / N));
       let ranges = [];
       for (let angle of angles) {
-        let range = await this.sendBleMessage("R" + angle);
-        ranges.push(range);
+        let msg = await this.sendBleMessage("R" + angle);
+        let split_msg = msg.split(":");
+        ranges.push({
+          angle: Number(split_msg[0]),
+          range: Number(split_msg[1])
+        });
       }
-
-      console.log("range1: " + ranges);
-
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          // store.push({
-          //   name: this.state.name,
-          //   location: position.coords,
-          //   time: Date(),
-          //   range: range
-          // });
-        },
-        error => {
-          console.log("error: " + error.message);
-        },
-        { enableHighAccuracy: true, timeout: 2000 }
-      );
+      return ranges;
     }
   };
 }
