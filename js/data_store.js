@@ -79,7 +79,11 @@ class Store {
       });
     } else {
       Share.share({
-        message: JSON.stringify(this.list),
+        message: JSON.stringify(
+          this.list.map(item => {
+            return { index: item.index, ...item.item };
+          })
+        ),
         title: "All Volaser Data"
       });
     }
