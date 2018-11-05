@@ -1,31 +1,74 @@
 import React from "react";
-import { StyleSheet, PermissionsAndroid } from "react-native";
-import { createMaterialTopTabNavigator } from "react-navigation";
+import {
+  createStackNavigator,
+  createMaterialTopTabNavigator
+} from "react-navigation";
+import { Icon } from "react-native-elements";
 
 import Measurements from "./measure";
 import Data from "./data";
 import Settings from "./settings";
 import Developer from "./dev";
+import Tutorial from "./tutorial";
 
 export default class App extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-  }
-
   render() {
-    return <RootTabsNavigator />;
+    return <RootStackNavigator />;
   }
 }
 
 const RootTabsNavigator = createMaterialTopTabNavigator(
   {
-    Measure: Measurements,
-    Data: Data,
-    // Settings: Settings,
-    Developer: Developer
+    Measurements: {
+      screen: Measurements,
+      navigationOptions: {
+        title: "Measure",
+        tabBarLabel: "Measure",
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name="build" type="material" size={28} color={tintColor} />
+        )
+      }
+    },
+    Data: {
+      screen: Data,
+      navigationOptions: {
+        title: "Data",
+        tabBarIcon: ({ tintColor }) => (
+          <Icon
+            name="database"
+            type="material-community"
+            size={28}
+            color={tintColor}
+          />
+        )
+      }
+    },
+    Settings: {
+      screen: Settings,
+      navigationOptions: {
+        title: "Settings",
+        tabBarIcon: ({ tintColor }) => (
+          <Icon
+            name="settings"
+            type="material-community"
+            size={28}
+            color={tintColor}
+          />
+        )
+      }
+    },
+    Developer: {
+      screen: Developer,
+      navigationOptions: {
+        title: "Dev",
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name="developer-mode" color={tintColor} />
+        )
+      }
+    }
   },
   {
-    initialRouteName: "Measure",
+    initialRouteName: "Measurements",
     navigationOptions: {
       headerTitleStyle: {
         fontWeight: "bold",
@@ -35,7 +78,6 @@ const RootTabsNavigator = createMaterialTopTabNavigator(
     tabBarPosition: "bottom",
     tabBarOptions: {
       showIcon: true,
-      pressColor: "#ffaaaa",
       style: {
         backgroundColor: "#118ec6"
       }
@@ -43,11 +85,16 @@ const RootTabsNavigator = createMaterialTopTabNavigator(
   }
 );
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
+const RootStackNavigator = createStackNavigator(
+  {
+    Root: {
+      screen: RootTabsNavigator
+    },
+    Tutorial: {
+      screen: Tutorial
+    }
+  },
+  {
+    headerMode: "none"
   }
-});
+);

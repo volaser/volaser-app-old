@@ -5,7 +5,8 @@
 import React from "react";
 import { ScrollView, Share } from "react-native";
 import { Text } from "react-native-elements";
-import { observable, observer } from "mobx";
+import { observable } from "mobx";
+import { observer } from "mobx-react";
 import dateFormat from "dateformat";
 
 class Logger {
@@ -20,8 +21,13 @@ class Logger {
       dateFormat(Date(), "HH:MM:ss ") +
       JSON.stringify(message);
   }
+
+  error(message) {
+    this.log(`Error: ${message}`);
+  }
 }
 
+@observer
 export class Console extends React.Component {
   export() {
     Share.share({
@@ -33,13 +39,19 @@ export class Console extends React.Component {
   render() {
     return (
       <ScrollView
+        style={{ backgroundColor: "#555" }}
         ref={ref => (this.scrollView = ref)}
         onContentSizeChange={(contentWidth, contentHeight) => {
           this.scrollView.scrollToEnd({ animated: true });
         }}
       >
         <Text
-          style={{ padding: 20, backgroundColor: "#222", color: "#fff" }}
+          style={{
+            flex: 1,
+            padding: 20,
+            backgroundColor: "#555",
+            color: "#fff"
+          }}
           onLongPress={() => this.export()}
         >
           {logger.logString}

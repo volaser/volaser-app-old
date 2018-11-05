@@ -1,9 +1,10 @@
 import React from "react";
-import { StyleSheet, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import { List, ListItem, Button } from "react-native-elements";
 import { observer } from "mobx-react";
 import dateFormat from "dateformat";
 
+import styles from "./styles";
 import store from "./data_store";
 import { calculateArea } from "./calculate";
 
@@ -25,10 +26,6 @@ export default class DataTable extends React.Component {
       )
     };
   };
-
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     data = store.list;
@@ -55,10 +52,3 @@ export default class DataTable extends React.Component {
     return <ScrollView style={styles.container}>{list_obj}</ScrollView>;
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff"
-  }
-});

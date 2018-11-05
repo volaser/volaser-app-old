@@ -1,6 +1,7 @@
 import { Share } from "react-native";
 import { action, observable } from "mobx";
 import asyncStore from "react-native-simple-store";
+import logger from "./logging";
 
 import haversine from "haversine-distance";
 
@@ -48,7 +49,7 @@ class Store {
         console.log({ list: this.list, index: index });
       }
     } catch (err) {
-      console.log("Could not refresh:" + err);
+      logger.log("Could not refresh:" + err);
       this.list = [];
       index = 0;
     }

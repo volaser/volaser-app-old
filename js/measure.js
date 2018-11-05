@@ -13,17 +13,9 @@ import { calculateArea } from "./calculate";
 import styles from "./styles";
 
 export const probeOffset = 0.53;
+
 @observer
 export default class Measurements extends React.Component {
-  static navigationOptions = {
-    headerTitle: "Volaser",
-    tabBarLabel: "Measure",
-    tabBarIcon: ({ tintColor }) => (
-      <Icon name="build" type="material" size={28} color={tintColor} />
-    ),
-    tabBarColor: "#ff8ec6"
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -191,10 +183,10 @@ export default class Measurements extends React.Component {
             <View style={{ flex: 1, justifyContent: "space-between" }}>
               <Button
                 rounded
-                title="Add Location"
+                title="Start Tutorial"
                 icon={{ name: "location-on" }}
                 backgroundColor="#e55"
-                onPress={() => this.addLocation()}
+                onPress={() => this.props.navigation.navigate("Tutorial")}
               />
               <Button
                 rounded

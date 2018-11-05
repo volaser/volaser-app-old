@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, TouchableHighlight } from "react-native";
+import { View } from "react-native";
 import Dialog from "react-native-dialog";
 import { Text, Button } from "react-native-elements";
 import MapView, { Marker } from "react-native-maps";

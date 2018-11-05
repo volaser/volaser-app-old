@@ -1,31 +1,18 @@
 import React from "react";
-import { ScrollView, View, StyleSheet } from "react-native";
-import { Icon, Text, Button } from "react-native-elements";
+import { View, StyleSheet } from "react-native";
+import { Text, Button } from "react-native-elements";
 import { observer } from "mobx-react";
 
+import ble from "./ble";
 import laser from "./laser";
 import motor from "./motor";
+import logger, { Console } from "./logging";
 
 @observer
 export default class Developer extends React.Component {
-  static navigationOptions = {
-    title: "DEV",
-    tabBarIcon: ({ tintColor }) => (
-      <Icon name="developer-mode" color={tintColor} />
-    )
-  };
-
   constructor(props) {
     super(props);
     this.state = { log: "" };
-  }
-
-  log(message) {
-    this.setState((prevState, props) => {
-      return {
-        log: prevState.log + "\n" + message
-      };
-    });
   }
 
   render() {
@@ -38,7 +25,7 @@ export default class Developer extends React.Component {
             backgroundColor={laser.ready ? "#3a84fc" : "#999"}
             onPress={async () => {
               const range = await laser.measureH();
-              this.log(`Horizontal Range: ${range} (m)`);
+              logger.log(`Horizontal Range: ${range} (m)`);
             }}
           />
           <Button
@@ -47,7 +34,7 @@ export default class Developer extends React.Component {
             backgroundColor={laser.ready ? "#3a84fc" : "#999"}
             onPress={async () => {
               const range = await laser.measureV();
-              this.log(`Vertical Range: ${range} (m)`);
+              logger.log(`Vertical Range: ${range} (m)`);
             }}
           />
         </View>
@@ -58,7 +45,7 @@ export default class Developer extends React.Component {
             backgroundColor={laser.ready ? "#3aac64" : "#999"}
             onPress={async () => {
               const area = await laser.measureOutline();
-              this.log(`Area: ${area}`);
+              logger.log(`Area: ${area}`);
             }}
           />
         </View>
@@ -85,16 +72,14 @@ export default class Developer extends React.Component {
             title="Force Reconnect"
             icon={{ name: "bluetooth" }}
             backgroundColor="#b42"
-            onPress={() => laser.scanAndConnect()}
+            onPress={() => ble.scanAndConnect()}
           />
         </View>
         <View style={{ padding: 20 }}>
           <Text>Laser: {laser.statusMsg}</Text>
           <Text>Motor: {motor.statusMsg}</Text>
         </View>
-        <ScrollView>
-          <Text style={{ flex: 1, padding: 20 }}>{this.state.log}</Text>
-        </ScrollView>
+        <Console />
       </View>
     );
   }

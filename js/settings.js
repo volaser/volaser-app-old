@@ -1,65 +1,60 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { Icon, Button, Text } from "react-native-elements";
+import { ScrollView } from "react-native";
+import { Icon, Text, List, ListItem, CheckBox } from "react-native-elements";
+
+import styles from "./styles";
+
+import { observable } from "mobx";
 import { observer } from "mobx-react";
-
-import laser from "./laser";
-import motor from "./motor";
-
 @observer
 export default class Settings extends React.Component {
-  static navigationOptions = {
-    title: "Settings",
-    tabBarIcon: ({ tintColor }) => (
-      <Icon
-        name="settings"
-        type="material-community"
-        size={28}
-        color={tintColor}
-      />
-    )
-  };
   render() {
     return (
-      <View style={styles.container}>
-        <Text>{laser.statusMsg}</Text>
-        <Text>{motor.statusMsg}</Text>
-        <Button
-          large
-          raised
-          backgroundColor="#38f"
-          title="Up"
-          icon={{ name: "arrow-upward" }}
-          onPress={() => {}}
-          onPressIn={() => motor.up()}
-          onPressOut={() => motor.brake()}
-        />
-        <Button
-          large
-          raised
-          backgroundColor="#38f"
-          title="Down"
-          icon={{ name: "arrow-downward" }}
-          onPress={() => {}}
-          onPressIn={() => motor.down()}
-          onPressOut={() => motor.brake()}
-        />
+      <ScrollView style={styles.container}>
+        <List>
+          <ListItem
+            title="Number of points per area scan"
+            rightTitle={settingsStore.settings.areaPoints.toString()}
+            leftIcon={{ name: "settings" }}
+          />
+          <ListItem
+            title="Group data points by location"
+            rightIcon={
+              <CheckBox
+                containerStyle={{
+                  backgroundColor: "#fff",
+                  padding: 0,
+                  borderWidth: 0
+                }}
+                checked={settingsStore.settings.groupLocations}
+                onPress={() =>
+                  (settingsStore.settings.groupLocations = !settingsStore
+                    .settings.groupLocations)
+                }
+              />
+            }
+          />
+          <ListItem
+            title="Probe Offset"
+            // subtitle="Distance from the probe reference point to the laser in home position"
+            rightTitle="0.53 m"
+          />
+        </List>
         <Text>Eawag 2018</Text>
-      </View>
+      </ScrollView>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff"
-  },
-  title: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10
-  }
-});
+class SettingsStore {
+  @observable
+  settings = {
+    areaPoints: 12,
+    groupLocations: false,
+    probeOffset: 0.53,
+    laserOffset: 0.02
+  };
+}
+
+const settingsStore = new SettingsStore();
+export { settingsStore };
