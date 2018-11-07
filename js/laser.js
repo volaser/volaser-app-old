@@ -1,10 +1,9 @@
-import { PermissionsAndroid } from "react-native";
-
 import { Buffer } from "buffer";
 
 import { observable } from "mobx";
 
 import logger from "./logging";
+import settingsStore from "./settings_store";
 
 const SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
 const RX_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
@@ -18,7 +17,7 @@ class Laser {
   device = null;
 
   info(message) {
-    logger.log(`laser: ${message}`);
+    console.log(`laser: ${message}`);
     this.statusMsg = message;
   }
 
@@ -50,13 +49,11 @@ class Laser {
 
   measureH = async () => {
     const range = await this.sendBleMessage("H");
-    logger.log(range);
     return Number(range);
   };
 
   measureV = async () => {
     const range = await this.sendBleMessage("V");
-    logger.log(range);
     return Number(range);
   };
 
@@ -70,16 +67,19 @@ class Laser {
 
   measureOutline = async () => {
     if (this.device !== null) {
-      N = 12;
+      N = parseInt(settingsStore.settings.areaPoints);
       // const l = 4 + 1;
       angles = Array.from({ length: N + 1 }, (x, i) => i * (360 / N));
       let ranges = [];
       await this.enableRotation();
       for (let angle of angles) {
-        logger.log(angle);
-        let msg = await this.sendBleMessage("R" + angle);
+        let msg = await this.sendBleMessage("R" + parseInt(angle));
         let split_msg = msg.split(":");
         ranges.push({
+          angle: Number(split_msg[0]),
+          range: Number(split_msg[1])
+        });
+        logger.log({
           angle: Number(split_msg[0]),
           range: Number(split_msg[1])
         });

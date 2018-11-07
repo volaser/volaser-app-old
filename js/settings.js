@@ -1,23 +1,48 @@
 import React from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
+import Dialog from "react-native-dialog";
 import { Icon, Text, List, ListItem, CheckBox } from "react-native-elements";
 
 import styles from "./styles";
-
-import { observable } from "mobx";
 import { observer } from "mobx-react";
-@observer
+
+import settingsStore from "./settings_store";
+
 export default class Settings extends React.Component {
   render() {
+    return <SettingsList />;
+  }
+}
+class SettingsList extends React.Component {
+  render() {
+    const settings = settingsStore.settings;
     return (
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <List>
-          <ListItem
-            title="Number of points per area scan"
-            rightTitle={settingsStore.settings.areaPoints.toString()}
-            leftIcon={{ name: "settings" }}
+          <SettingsItem
+            title="Number of area points"
+            subtitle="This is the number of points the laser takes when measuring area"
+            value={settings.areaPoints}
+            onChange={newVal => settingsStore.update({ areaPoints: newVal })}
           />
-          <ListItem
+
+          <SettingsItem
+            title="Probe offset"
+            subtitle="This is the distance in meters between the probe reference point and the tip of the laser when in the home position."
+            units="m"
+            value={settings.probeOffset}
+            onChange={newVal => settingsStore.update({ probeOffset: newVal })}
+          />
+
+          <SettingsItem
+            title="Laser offset"
+            subtitle="This is the distance in meters between the horizontal laser and the axis of rotation."
+            units="m"
+            value={settings.laserOffset}
+            onChange={newVal => settingsStore.update({ laserOffset: newVal })}
+          />
+
+          {/* <ListItem
             title="Group data points by location"
             rightIcon={
               <CheckBox
@@ -33,28 +58,54 @@ export default class Settings extends React.Component {
                 }
               />
             }
-          />
-          <ListItem
-            title="Probe Offset"
-            // subtitle="Distance from the probe reference point to the laser in home position"
-            rightTitle="0.53 m"
-          />
+          /> */}
         </List>
-        <Text>Eawag 2018</Text>
-      </ScrollView>
+      </View>
     );
   }
 }
 
-class SettingsStore {
-  @observable
-  settings = {
-    areaPoints: 12,
-    groupLocations: false,
-    probeOffset: 0.53,
-    laserOffset: 0.02
-  };
-}
+@observer
+class SettingsItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dialogVisible: false,
+      value: this.props.value.toString()
+    };
+  }
 
-const settingsStore = new SettingsStore();
-export { settingsStore };
+  render() {
+    const units = this.props.units == null ? "" : ` (${this.props.units})`;
+    return (
+      <View>
+        <Dialog.Container visible={this.state.dialogVisible}>
+          <Dialog.Title>{this.props.title}</Dialog.Title>
+          <Dialog.Description>{this.props.subtitle}</Dialog.Description>
+          <Dialog.Input
+            style={{ borderBottomWidth: 0.5 }}
+            onChangeText={event => this.setState({ value: event })}
+          />
+          <Dialog.Button
+            label="Cancel"
+            onPress={() => this.setState({ dialogVisible: false })}
+          />
+          <Dialog.Button
+            label="Submit"
+            onPress={() => {
+              this.props.onChange(this.state.value.toString());
+              this.setState({ dialogVisible: false });
+            }}
+          />
+        </Dialog.Container>
+        <ListItem
+          title={this.props.title}
+          rightTitle={this.state.value + units}
+          onPress={() => {
+            this.setState({ dialogVisible: true });
+          }}
+        />
+      </View>
+    );
+  }
+}

@@ -9,10 +9,9 @@ import { observer } from "mobx-react";
 import motor from "./motor";
 import laser from "./laser";
 import store from "./data_store";
+import settingsStore from "./settings_store";
 import { calculateArea } from "./calculate";
 import styles from "./styles";
-
-export const probeOffset = 0.53;
 
 @observer
 export default class Measurements extends React.Component {
@@ -58,23 +57,27 @@ export default class Measurements extends React.Component {
       emptyVolume:
         calculateArea(this.state.areaOutline) * this.state.emptyDepth,
       sludgeVolume:
-        (this.state.probeHeight - this.state.probeDepth - probeOffset) *
-        calculateArea(this.state.areaOutline)
+        (this.state.probeHeight -
+          this.state.probeDepth -
+          settingsStore.settings.probeOffset) *
+        calculateArea(this.state.areaOutline),
+      probeOffset: settingsStore.settings.probeOffset,
+      laserOffset: settingsStore.settings.laserOffset
     };
     try {
       const position = await this.getCurrentPosition();
       dataPoint.location = position.coords;
     } catch {
-      console.log("timeout getting position");
+      logger.log("timeout getting position");
     }
     store.push(dataPoint);
     Alert.alert(
       "Data point saved",
       `Name: ${this.state.name}\nEmpty Volume: ${calculateArea(
-        this.state.outlareaOutlineine
+        this.state.areaOutline
       )}\nSludge Volume: ${(this.state.probeHeight -
         this.state.probeDepth -
-        probeOffset) *
+        settingsStore.settings.probeOffset) *
         calculateArea(this.state.areaOutline)}`,
       [{ text: "OK" }]
     );
@@ -133,11 +136,6 @@ export default class Measurements extends React.Component {
             }
           />
         </Dialog.Container>
-        {/* <Header
-          leftComponent={{ icon: "menu", color: "#fff" }}
-          centerComponent={{ text: "Volaser", style: { color: "#fff" } }}
-          rightComponent={{ icon: "home", color: "#fff" }}
-        /> */}
 
         <View style={styles.container}>
           <View style={{ flex: 1 }}>
@@ -167,7 +165,7 @@ export default class Measurements extends React.Component {
               />
               <Button
                 rounded
-                title="Empty Depth"
+                title="Tank Depth"
                 icon={{ name: "arrow-downward" }}
                 backgroundColor={laser.ready ? "#386" : "#999"}
                 onPress={async () => this.measureEmptyDepth()}
@@ -241,17 +239,17 @@ export default class Measurements extends React.Component {
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 16 }}>
-                  Probe Depth: {this.state.probeDepth.toFixed(3)} m
+                  Sludge Depth: {this.state.probeDepth.toFixed(3)} m
                 </Text>
                 <Text style={{ fontSize: 16 }}>
-                  Probe Offset: {probeOffset} m
+                  Probe Offset: {settingsStore.settings.probeOffset} m
                 </Text>
                 <Text style={{ fontSize: 16 }}>
                   Sludge Volume:
                   {(
                     (this.state.probeHeight -
                       this.state.probeDepth -
-                      probeOffset) *
+                      settingsStore.settings.probeOffset) *
                     calculateArea(this.state.areaOutline)
                   ).toFixed(3)}
                   m³

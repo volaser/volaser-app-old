@@ -80,6 +80,9 @@ const RootTabsNavigator = createMaterialTopTabNavigator(
       showIcon: true,
       style: {
         backgroundColor: "#118ec6"
+      },
+      labelStyle: {
+        fontSize: 12
       }
     }
   }

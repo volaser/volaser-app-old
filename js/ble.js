@@ -44,6 +44,8 @@ class BLE {
     pause = false;
     const timeout = ms => new Promise(res => setTimeout(res, ms));
     this.manager.stopDeviceScan();
+    laser.info("Looking for Volaser...");
+    motor.info("Looking for Winch...");
     this.manager.startDeviceScan(
       null,
       { scanMode: ScanMode.LowLatency },
@@ -62,7 +64,7 @@ class BLE {
               logger.log("Connecting to Volaser");
               laser.info("Connecting...");
               try {
-                await timeout(500);
+                await timeout(750);
                 await device.connect();
                 logger.log("Discovering Volaser services and characteristics");
                 laser.info("Discovering services and characteristics");

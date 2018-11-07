@@ -38,17 +38,7 @@ export default class Developer extends React.Component {
             }}
           />
         </View>
-        <View style={styles.row}>
-          <Button
-            title="Measure Area"
-            icon={{ name: "album" }}
-            backgroundColor={laser.ready ? "#3aac64" : "#999"}
-            onPress={async () => {
-              const area = await laser.measureOutline();
-              logger.log(`Area: ${area}`);
-            }}
-          />
-        </View>
+
         <View style={styles.row}>
           <Button
             backgroundColor={motor.ready ? "#38f" : "#999"}

@@ -6,11 +6,13 @@ import MapView, { Marker } from "react-native-maps";
 import dateFormat from "dateformat";
 
 import store from "./data_store";
+import settingsStore from "./settings_store";
 import styles from "./styles";
 import Area from "./area";
 import { calculateArea } from "./calculate";
 
-import { probeOffset } from "./measure";
+import { observer } from "mobx-react";
+@observer
 export default class DataCard extends React.Component {
   static navigationOptions = ({ navigation, navigationOptions }) => {
     const { params } = navigation.state;
@@ -57,7 +59,8 @@ export default class DataCard extends React.Component {
     const area = calculateArea(areaOutline);
     const emptyVolume = calculateArea(areaOutline) * emptyDepth;
     const sludgeVolume =
-      calculateArea(areaOutline) * (probeHeight - probeDepth - probeOffset);
+      calculateArea(areaOutline) *
+      (probeHeight - probeDepth - settingsStore.settings.probeOffset);
 
     return (
       <View style={styles.container}>
@@ -111,7 +114,8 @@ export default class DataCard extends React.Component {
             </Text>
             <Text style={{ fontSize: 16 }}>Area: {area.toFixed(3)} m²</Text>
             <Text style={{ fontSize: 16 }}>
-              Probe Offset: {probeOffset.toFixed(3)} m
+              Probe Offset:{" "}
+              {parseFloat(settingsStore.settings.probeOffset).toFixed(3)} m
             </Text>
             <Text style={{ fontSize: 16 }}>
               Empty Volume: {emptyVolume.toFixed(3)} m³

@@ -1,10 +1,10 @@
 apply plugin: "com.android.application"
 
 ext.versionMajor = 0
-ext.versionMinor = 1
-ext.versionPatch = 1
+ext.versionMinor = 2
+ext.versionPatch = 0
 ext.versionClassifier = null
-ext.isSnapshot = true
+ext.isSnapshot = false
 
 private Integer generateVersionCode() {
 	return rootProject.ext.minSdkVersion * 10000000 + ext.versionMajor * 10000 + ext.versionMinor * 100 + ext.versionPatch
