@@ -1,8 +1,10 @@
 # Compass
+
 - get magnetometer data into the developer tab
 - turn into a direction
 
 # USB serial
+
 - get USB serial communication into developer tab
 - create mock device that responds to queries
 
@@ -11,6 +13,7 @@
 - make the scan average across angles
 
 # Cleanup
+
 - remove all BLE
 - remove extra buttons
 
