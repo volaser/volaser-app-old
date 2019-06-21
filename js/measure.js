@@ -1,12 +1,11 @@
 import React from "react";
 import { View, Alert } from "react-native";
-import { Icon, Button, FormInput, Text } from "react-native-elements";
+import { Button, FormInput, Text } from "react-native-elements";
 import Dialog from "react-native-dialog";
 
 import Area from "./area";
 import { observer } from "mobx-react";
 
-import motor from "./motor";
 import laser from "./laser";
 import store from "./data_store";
 import settingsStore from "./settings_store";
@@ -192,24 +191,6 @@ export default class Measurements extends React.Component {
                 title={`Probe Height: ${this.state.probeHeight}`}
                 backgroundColor="#299"
                 onPress={async () => this.setState({ dialogVisible: true })}
-              />
-              <Button
-                rounded
-                backgroundColor={motor.ready ? "#38f" : "#999"}
-                title="Up"
-                icon={{ name: "keyboard-arrow-up" }}
-                onPress={() => {}}
-                onPressIn={() => motor.up()}
-                onPressOut={() => motor.brake()}
-              />
-              <Button
-                rounded
-                backgroundColor={motor.ready ? "#38f" : "#999"}
-                title="Down"
-                icon={{ name: "keyboard-arrow-down" }}
-                onPress={() => {}}
-                onPressIn={() => motor.down()}
-                onPressOut={() => motor.brake()}
               />
             </View>
           </View>

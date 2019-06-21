@@ -3,9 +3,6 @@ import { View } from "react-native";
 import { Icon, Text, Button } from "react-native-elements";
 import Onboarding from "react-native-onboarding-swiper";
 
-import ble from "./ble";
-import laser from "./laser";
-import motor from "./motor";
 import { observer } from "mobx-react";
 
 export default class TutorialOnBoard extends React.Component {
@@ -37,13 +34,6 @@ export default class TutorialOnBoard extends React.Component {
               "Insert the probe until it reaches the bottom of the tank. Enter the distance measured from the bottom of the tank to the reference point"
           },
           {
-            backgroundColor: "#f77",
-            image: <SludgeDepth />,
-            title: "Measure Sludge Depth",
-            subtitle:
-              "Move the laser head to the home position and measure the depth to the sludge."
-          },
-          {
             backgroundColor: "#176",
             image: <Icon name="palette" color="#fff" size={96} />,
             title: "Measure the Tank Height",
@@ -71,7 +61,7 @@ export default class TutorialOnBoard extends React.Component {
 @observer
 class BluetoothPage extends React.Component {
   render() {
-    let connected = laser.ready && motor.ready;
+    let connected = false;
     return (
       <View
         style={{
@@ -86,85 +76,16 @@ class BluetoothPage extends React.Component {
           color={connected ? "#fff" : "#aaa"}
           size={96}
         />
-        <Text style={{ color: "#fff", marginTop: 20 }}>
-          Laser: {laser.statusMsg}
-        </Text>
-        <Text style={{ color: "#fff", marginBottom: 20 }}>
-          Winch: {motor.statusMsg}
-        </Text>
+        <Text style={{ color: "#fff", marginTop: 20 }}>Laser:</Text>
+        <Text style={{ color: "#fff", marginBottom: 20 }}>Winch:</Text>
         <Button
           rounded
           style={{ marginTop: 20, width: "50%" }}
           title="Reconnect"
           backgroundColor="#fff"
           color="#000"
-          onPress={() => ble.scanAndConnect()}
+          onPress={() => {}}
         />
-      </View>
-    );
-  }
-}
-
-@observer
-class SludgeDepth extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      probeDepth: 0
-    };
-  }
-  measureProbeDepth = async () => {
-    if (laser.ready) {
-      const range = await laser.measureV();
-      this.setState({ sludgeDepth: range });
-    }
-  };
-  render() {
-    return (
-      <View
-        style={{
-          alignItems: "center"
-        }}
-      >
-        <Icon name="get-app" type="material" color="#fff" size={96} />
-        <Text style={{ color: "#fff", marginBottom: 20 }}>
-          Sludge Depth: {this.state.sludgeDepth} (m)
-        </Text>
-        <View
-          style={{
-            height: 150,
-            justifyContent: "space-between"
-          }}
-        >
-          <Button
-            rounded
-            title="Probe Depth"
-            icon={{ name: "arrow-downward" }}
-            backgroundColor={laser.ready ? "#fff" : "#999"}
-            color="#000"
-            onPress={async () => this.measureProbeDepth()}
-          />
-          <Button
-            rounded
-            backgroundColor={motor.ready ? "#fff" : "#999"}
-            color="#000"
-            title="Move Up"
-            icon={{ name: "keyboard-arrow-up", color: "#000" }}
-            onPress={() => {}}
-            onPressIn={() => motor.up()}
-            onPressOut={() => motor.brake()}
-          />
-          <Button
-            rounded
-            backgroundColor={motor.ready ? "#fff" : "#999"}
-            color="#000"
-            title="Move Down"
-            icon={{ name: "keyboard-arrow-down", color: "#000" }}
-            onPress={() => {}}
-            onPressIn={() => motor.down()}
-            onPressOut={() => motor.brake()}
-          />
-        </View>
       </View>
     );
   }
