@@ -1,4 +1,8 @@
 rootProject.name = 'volaser'
+include ':react-native-serialport'
+project(':react-native-serialport').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-serialport/android')
+include ':react-native-sensors'
+project(':react-native-sensors').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-sensors/android')
 include ':react-native-svg'
 project(':react-native-svg').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-svg/android')
 include ':react-native-maps'

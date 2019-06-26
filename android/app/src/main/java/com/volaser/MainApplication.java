@@ -3,6 +3,8 @@ package com.volaser;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.melihyarikkaya.rnserialport.RNSerialportPackage;
+import com.sensors.RNSensorsPackage;
 import com.horcrux.svg.SvgPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -27,6 +29,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSerialportPackage(),
+            new RNSensorsPackage(),
             new SvgPackage(),
             new MapsPackage(),
             new VectorIconsPackage(),
