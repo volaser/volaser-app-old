@@ -1,13 +1,8 @@
-import { Buffer } from "buffer";
-
 import { observable } from "mobx";
 
 import logger from "./logging";
 import settingsStore from "./settings_store";
-
-const SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
-const RX_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
-const TX_UUID = "a812aeed-78d0-474a-b9b1-20a8a1f95463";
+import usb from "./usb";
 
 class Laser {
   @observable
@@ -25,45 +20,13 @@ class Laser {
     this.info(`Error: ${message}`);
   }
 
-  sendBleMessage = async message => {
-    if (this.device !== null) {
-      try {
-        await this.device.writeCharacteristicWithResponseForService(
-          SERVICE_UUID,
-          RX_UUID,
-          Buffer.from(message).toString("base64")
-        );
-
-        let characteristic = await this.device.readCharacteristicForService(
-          SERVICE_UUID,
-          TX_UUID
-        );
-
-        return Buffer.from(characteristic.value, "base64").toString("ascii");
-      } catch (error) {
-        this.error(error);
-        this.ready = false;
-      }
+  measure() {
+    if (usb.connected) {
+      usb.write("L\r\n");
+      const range = 0.0;
+      return Number(range);
     }
-  };
-
-  measureH = async () => {
-    const range = await this.sendBleMessage("H");
-    return Number(range);
-  };
-
-  measureV = async () => {
-    const range = await this.sendBleMessage("V");
-    return Number(range);
-  };
-
-  enableRotation = async () => {
-    await this.sendBleMessage("E");
-  };
-
-  disableRotation = async () => {
-    await this.sendBleMessage("D");
-  };
+  }
 
   measureOutline = async () => {
     if (this.device !== null) {

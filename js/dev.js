@@ -7,7 +7,6 @@ import laser from "./laser";
 import usb from "./usb";
 import logger, { Console } from "./logging";
 // import { magSub } from "./compass";
-import ManualConnection from "./usb";
 
 @observer
 export default class Developer extends React.Component {
@@ -19,42 +18,26 @@ export default class Developer extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        {/* <View style={styles.row}>
-          <Button
-            title="Measure H"
-            icon={{ name: "arrow-forward" }}
-            backgroundColor={laser.ready ? "#3a84fc" : "#999"}
-            onPress={async () => {
-              const range = await laser.measureH();
-              logger.log(`Horizontal Range: ${range} (m)`);
-            }}
-          />
-          <Button
-            title="Measure V"
-            icon={{ name: "arrow-downward" }}
-            backgroundColor={laser.ready ? "#3a84fc" : "#999"}
-            onPress={async () => {
-              const range = await laser.measureV();
-              logger.log(`Vertical Range: ${range} (m)`);
-            }}
-          />
-        </View> */}
-        {/* <View style={styles.row}>
+        <View style={styles.row}>
           <Button
             rounded
-            title="Force Reconnect"
-            icon={{ name: "bluetooth" }}
-            backgroundColor="#b42"
-            onPress={() => usb.getDeviceAsync()}
+            title="Measure H"
+            icon={{ name: "arrow-forward" }}
+            backgroundColor={usb.connected ? "#3a84fc" : "#999"}
+            onPress={async () => {
+              if (usb.connected) {
+                const range = await laser.measure();
+                logger.log(`Horizontal Range: ${range} (m)`);
+              }
+            }}
           />
-        </View> */}
-        {/* <View style={{ padding: 20 }}>
+        </View>
+        <View style={{ padding: 20 }}>
           <Text>Laser: {laser.statusMsg}</Text>
           <Text>Compass: </Text>
-          <Text>USB: </Text>
-        </View> */}
-        <ManualConnection />
-        {/* <Console /> */}
+          <Text>USB: {usb.connected ? "Connected" : "Disconnected"} </Text>
+        </View>
+        <Console />
       </View>
     );
   }

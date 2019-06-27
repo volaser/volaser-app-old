@@ -18,9 +18,6 @@ export default class Measurements extends React.Component {
     super(props);
     this.state = {
       name: "",
-      emptyDepth: 0.0,
-      probeDepth: 0.0,
-      probeHeight: 0.0,
       areaOutline: [],
       dialogVisible: false,
       dialogHeight: 0.0
@@ -93,20 +90,6 @@ export default class Measurements extends React.Component {
     }
   };
 
-  measureEmptyDepth = async () => {
-    if (laser.ready) {
-      const range = await laser.measureV();
-      this.setState({ emptyDepth: range });
-    }
-  };
-
-  measureProbeDepth = async () => {
-    if (laser.ready) {
-      const range = await laser.measureV();
-      this.setState({ probeDepth: range });
-    }
-  };
-
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -157,20 +140,6 @@ export default class Measurements extends React.Component {
               />
               <Button
                 rounded
-                title="Probe Depth"
-                icon={{ name: "arrow-downward" }}
-                backgroundColor={laser.ready ? "#386" : "#999"}
-                onPress={async () => this.measureProbeDepth()}
-              />
-              <Button
-                rounded
-                title="Tank Depth"
-                icon={{ name: "arrow-downward" }}
-                backgroundColor={laser.ready ? "#386" : "#999"}
-                onPress={async () => this.measureEmptyDepth()}
-              />
-              <Button
-                rounded
                 title="Measure Area"
                 icon={{ name: "settings-overscan" }}
                 backgroundColor={laser.ready ? "#386" : "#999"}
@@ -185,13 +154,6 @@ export default class Measurements extends React.Component {
                 backgroundColor="#e55"
                 onPress={() => this.props.navigation.navigate("Tutorial")}
               />
-              <Button
-                rounded
-                small
-                title={`Probe Height: ${this.state.probeHeight}`}
-                backgroundColor="#299"
-                onPress={async () => this.setState({ dialogVisible: true })}
-              />
             </View>
           </View>
           <View style={{ padding: 20, flex: 1 }}>
@@ -204,36 +166,7 @@ export default class Measurements extends React.Component {
             >
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 16 }}>
-                  Empty Depth: {this.state.emptyDepth.toFixed(3)} m
-                </Text>
-                <Text style={{ fontSize: 16 }}>
                   Area: {calculateArea(this.state.areaOutline).toFixed(3)} m²
-                </Text>
-                <Text style={{ fontSize: 16 }}>
-                  Empty Volume:
-                  {(
-                    this.state.emptyDepth *
-                    calculateArea(this.state.areaOutline)
-                  ).toFixed(3)}
-                  m³
-                </Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16 }}>
-                  Sludge Depth: {this.state.probeDepth.toFixed(3)} m
-                </Text>
-                <Text style={{ fontSize: 16 }}>
-                  Probe Offset: {settingsStore.settings.probeOffset} m
-                </Text>
-                <Text style={{ fontSize: 16 }}>
-                  Sludge Volume:
-                  {(
-                    (this.state.probeHeight -
-                      this.state.probeDepth -
-                      settingsStore.settings.probeOffset) *
-                    calculateArea(this.state.areaOutline)
-                  ).toFixed(3)}
-                  m³
                 </Text>
               </View>
             </View>
