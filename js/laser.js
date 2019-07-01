@@ -22,9 +22,7 @@ class Laser {
 
   measure() {
     if (usb.connected) {
-      usb.write("L\r\n");
-      const range = 0.0;
-      return Number(range);
+      usb.write("D\r\n");
     }
   }
 
