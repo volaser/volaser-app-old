@@ -22,7 +22,6 @@ class USB {
   usbAttached = false;
   baudRate = "115200";
   interface = "-1";
-  sendText = "L";
   returnedDataType = definitions.RETURNED_DATA_TYPES.HEXSTRING;
 
   constructor() {
