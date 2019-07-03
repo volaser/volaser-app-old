@@ -182,8 +182,8 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':react-native-simple-compass')
     compile project(':react-native-serialport')
-    compile project(':react-native-sensors')
     implementation project(':react-native-svg')
     implementation project(':react-native-maps')
     implementation project(':react-native-vector-icons')

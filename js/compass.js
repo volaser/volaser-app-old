@@ -1,11 +1,21 @@
-import { magenetometer, gyroscope } from "react-native-sensors";
+import { magnetometer } from "react-native-sensors";
+import { observable } from "mobx";
+import { throttleTime } from "rxjs/operators";
+import RNSimpleCompass from "react-native-simple-compass";
 
-const magSub = magenetometer.subscribe(({ x, y, z, timestamp }) =>
-  console.log({ x, y, z, timestamp })
-);
+class Compass {
+  @observable
+  angle = 0;
 
-const gyroSub = gyroscope.subscribe(({ x, y, z, timestamp }) =>
-  console.log({ x, y, z, timestamp })
-);
+  constructor() {
+    // Number of degrees changed before the callback is triggered
+    const degree_update_rate = 1;
+    RNSimpleCompass.start(degree_update_rate, angle => {
+      this.angle = angle;
+      // RNSimpleCompass.stop();
+    });
+  }
+}
 
-export { magSub };
+const compass = new Compass();
+export default compass;
