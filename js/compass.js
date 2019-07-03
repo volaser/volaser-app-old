@@ -1,6 +1,4 @@
-import { magnetometer } from "react-native-sensors";
 import { observable } from "mobx";
-import { throttleTime } from "rxjs/operators";
 import RNSimpleCompass from "react-native-simple-compass";
 
 class Compass {
@@ -12,7 +10,7 @@ class Compass {
     const degree_update_rate = 1;
     RNSimpleCompass.start(degree_update_rate, angle => {
       this.angle = angle;
-      // RNSimpleCompass.stop();
+      RNSimpleCompass.stop();
     });
   }
 }
