@@ -22,21 +22,19 @@ export default class Developer extends React.Component {
         <View style={styles.row}>
           <Button
             rounded
-            title="Measure H"
+            title="Test Laser"
             icon={{ name: "arrow-forward" }}
             backgroundColor={usb.connected ? "#3a84fc" : "#999"}
             onPress={async () => {
               if (usb.connected) {
-                laser.measure();
-                logger.log(`Range: `);
+                let range = await laser.measure();
+                logger.log(`Range: ${range}`);
               }
             }}
           />
         </View>
         <View style={{ padding: 20 }}>
-          <Text>Laser: {laser.statusMsg}</Text>
-          {/* <Text>Compass x: {compass.x.toFixed(2)}</Text> */}
-          <Text>Compass x: {compass.angle.toFixed(2)}</Text>
+          <Text>Compass: {compass.angle} degrees</Text>
           <Text>USB: {usb.connected ? "Connected" : "Disconnected"} </Text>
         </View>
         <Console />

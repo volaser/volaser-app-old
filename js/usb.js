@@ -1,14 +1,4 @@
-import React, { Component } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  Alert,
-  DeviceEventEmitter
-} from "react-native";
+import { Alert, DeviceEventEmitter } from "react-native";
 import { RNSerialport, definitions, actions } from "react-native-serialport";
 import { observable } from "mobx";
 import logger from "./logging";
@@ -27,7 +17,6 @@ class USB {
   constructor() {
     this.startUSBListener = this.startUSBListener.bind(this);
     this.stopUSBListener = this.stopUSBListener.bind(this);
-
     this.startUSBListener();
   }
 
@@ -79,7 +68,7 @@ class USB {
       },
       this
     );
-    DeviceEventEmitter.addListener(actions.ON_READ_DATA, this.read, this);
+
     RNSerialport.setReturnedDataType(this.returnedDataType);
     RNSerialport.setAutoConnectBaudRate(parseInt(this.baudRate, 10));
     RNSerialport.setInterface(parseInt(this.interface, 10));
@@ -101,22 +90,28 @@ class USB {
     logger.error(error);
   }
 
-  read(data) {
-    if (this.returnedDataType === definitions.RETURNED_DATA_TYPES.INTARRAY) {
-      const payload = RNSerialport.intArrayToUtf16(data.payload);
-      this.output = payload;
-      logger.log({ usb: payload });
-    } else if (
-      this.returnedDataType === definitions.RETURNED_DATA_TYPES.HEXSTRING
-    ) {
-      const payload = RNSerialport.hexToUtf16(data.payload);
-      this.output = payload;
-      logger.log({ usb: payload });
-    }
-  }
-
   write(text) {
-    RNSerialport.writeString(text);
+    return new Promise((resolve, reject) => {
+      RNSerialport.writeString(text);
+      let subscription = DeviceEventEmitter.addListener(
+        actions.ON_READ_DATA,
+        data => {
+          if (
+            this.returnedDataType === definitions.RETURNED_DATA_TYPES.INTARRAY
+          ) {
+            const payload = RNSerialport.intArrayToUtf16(data.payload);
+            resolve(payload);
+          } else if (
+            this.returnedDataType === definitions.RETURNED_DATA_TYPES.HEXSTRING
+          ) {
+            const payload = RNSerialport.hexToUtf16(data.payload);
+            resolve(payload);
+          }
+          subscription.remove();
+        },
+        this
+      );
+    });
   }
 }
 

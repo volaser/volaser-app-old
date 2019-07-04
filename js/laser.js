@@ -5,12 +5,6 @@ import settingsStore from "./settings_store";
 import usb from "./usb";
 
 class Laser {
-  @observable
-  statusMsg = "";
-  @observable
-  ready = false;
-  device = null;
-
   info(message) {
     console.log(`laser: ${message}`);
     this.statusMsg = message;
@@ -20,11 +14,12 @@ class Laser {
     this.info(`Error: ${message}`);
   }
 
-  measure() {
+  measure = async () => {
     if (usb.connected) {
-      usb.write("D\r\n");
+      const data = await usb.write("D\r\n");
+      return parseFloat(data);
     }
-  }
+  };
 
   measureOutline = async () => {
     if (this.device !== null) {
