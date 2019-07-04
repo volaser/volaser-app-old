@@ -7,10 +7,10 @@ class Compass {
 
   constructor() {
     // Number of degrees changed before the callback is triggered
-    const degree_update_rate = 1;
+    const degree_update_rate = 1.0;
     RNSimpleCompass.start(degree_update_rate, angle => {
       this.angle = angle;
-      RNSimpleCompass.stop();
+      // RNSimpleCompass.stop();
     });
   }
 }
