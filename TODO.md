@@ -1,19 +1,10 @@
-# Compass
+# TODO
 
-- get magnetometer data into the developer tab
-- turn into a direction
-
-# USB serial
-
-- get USB serial communication into developer tab
-- create mock device that responds to queries
-
-- implement a scan, where a start button is hit and ordered pairs of angle and distance are recorded
-- make the scan plot in realtime.
-- make the scan average across angles
-
-# Cleanup
-
-- remove all BLE
-- remove extra buttons
-
+- [ ] Change debug tab to get more information from laser
+- [ ] check if magnetometer is calibrated somehow
+- [ ] add csv export
+- [ ] clean up interface
+- [ ] prevent phone from sleeping
+- [ ] make keyboard go over interface, instead of resizing view
+- [ ] create an icon
+- [ ] update the tutorial
