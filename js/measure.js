@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Alert } from "react-native";
 import { Button, FormInput, Text } from "react-native-elements";
-import Dialog from "react-native-dialog";
 
 import Area from "./area";
 import { observer } from "mobx-react";
@@ -45,24 +44,12 @@ export default class Measurements extends React.Component {
     });
   };
 
-  logVolume = async () => {
+  logMeasurement = async () => {
     let dataPoint = {
       name: this.state.name,
       time: Date(),
-      probeHeight: this.state.probeHeight,
-      emptyDepth: this.state.emptyDepth,
-      probeDepth: this.state.probeDepth,
       areaOutline: this.state.areaOutline,
-      area: calculateArea(this.state.areaOutline),
-      emptyVolume:
-        calculateArea(this.state.areaOutline) * this.state.emptyDepth,
-      sludgeVolume:
-        (this.state.probeHeight -
-          this.state.probeDepth -
-          settingsStore.settings.probeOffset) *
-        calculateArea(this.state.areaOutline),
-      probeOffset: settingsStore.settings.probeOffset,
-      laserOffset: settingsStore.settings.laserOffset
+      area: calculateArea(this.state.areaOutline)
     };
     try {
       const position = await this.getCurrentPosition();
@@ -73,24 +60,39 @@ export default class Measurements extends React.Component {
     store.push(dataPoint);
     Alert.alert(
       "Data point saved",
-      `Name: ${this.state.name}\nEmpty Volume: ${calculateArea(
+      `Name: ${this.state.name}\nArea: ${calculateArea(
         this.state.areaOutline
-      )}\nSludge Volume: ${(this.state.probeHeight -
-        this.state.probeDepth -
-        settingsStore.settings.probeOffset) *
-        calculateArea(this.state.areaOutline)}`,
+      ).toFixed(2)} m²`,
       [{ text: "OK" }]
     );
   };
 
+  startMeasureArea() {
+    this.setState({ measuring: true, areaOutline: [] });
+    this.interval = setInterval(() => {
+      this.measureAreaPoint();
+    }, 100);
+  }
+
+  stopMeasureArea() {
+    this.setState({ measuring: false });
+    clearInterval(this.interval);
+  }
+
   measureAreaPoint = async () => {
     if (usb.connected) {
+      const angle = compass.angle;
       const range = await laser.measure();
-      const point = await { angle: compass.angle, range: range };
+      const point = await { angle: angle, range: range };
       logger.log(point);
       if (range > 0) {
-        this.setState((prevState, props) => {
-          return { areaOutline: [...prevState.areaOutline, point] };
+        this.setState(prevState => {
+          return {
+            areaOutline: [
+              ...prevState.areaOutline.filter(point => point.angle != angle),
+              point
+            ].sort((a, b) => a.angle - b.angle)
+          };
         });
       }
     }
@@ -103,12 +105,7 @@ export default class Measurements extends React.Component {
         title={"Measure Area"}
         icon={{ name: "settings-overscan" }}
         backgroundColor={usb.connected ? "#386" : "#999"}
-        onPress={() => {
-          this.setState({ measuring: true, areaOutline: [] });
-          this.interval = setInterval(() => {
-            this.measureAreaPoint();
-          }, 250);
-        }}
+        onPress={() => this.startMeasureArea()}
       />
     );
 
@@ -118,41 +115,12 @@ export default class Measurements extends React.Component {
         title={"Done Measuring"}
         icon={{ name: "settings-overscan" }}
         backgroundColor={usb.connected ? "#836" : "#999"}
-        onPress={() => {
-          this.setState({ measuring: false });
-          clearInterval(this.interval);
-        }}
+        onPress={() => this.stopMeasureArea()}
       />
     );
 
     return (
       <View style={{ flex: 1 }}>
-        <Dialog.Container visible={this.state.dialogVisible}>
-          <Dialog.Title>Probe Height</Dialog.Title>
-          <Dialog.Description>
-            Input the distance from the tip of the probe to the laser reference
-            point:
-          </Dialog.Description>
-          <Dialog.Input
-            label="Height (m):"
-            style={{ borderBottomWidth: 0.5 }}
-            onChangeText={event => this.setState({ dialogHeight: event })}
-          />
-          <Dialog.Button
-            label="Cancel"
-            onPress={() => this.setState({ dialogVisible: false })}
-          />
-          <Dialog.Button
-            label="Submit"
-            onPress={() =>
-              this.setState({
-                probeHeight: Number(this.state.dialogHeight),
-                dialogVisible: false
-              })
-            }
-          />
-        </Dialog.Container>
-
         <View style={styles.container}>
           <View style={{ flex: 1 }}>
             <FormInput
@@ -167,10 +135,10 @@ export default class Measurements extends React.Component {
             <View style={{ justifyContent: "space-between" }}>
               <Button
                 rounded
-                title="Log Volume"
+                title="Save Measurement"
                 icon={{ name: "loupe" }}
                 backgroundColor="#55e"
-                onPress={() => this.logVolume()}
+                onPress={() => this.logMeasurement()}
               />
               {this.state.measuring ? done : measure}
             </View>
@@ -194,7 +162,7 @@ export default class Measurements extends React.Component {
             >
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 16 }}>
-                  Area: {calculateArea(this.state.areaOutline).toFixed(3)} m²
+                  Area: {calculateArea(this.state.areaOutline).toFixed(2)} m²
                 </Text>
               </View>
             </View>
