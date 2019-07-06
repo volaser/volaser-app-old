@@ -6,7 +6,10 @@ import Dialog from "react-native-dialog";
 import Area from "./area";
 import { observer } from "mobx-react";
 
+import compass from "./compass";
+import usb from "./usb";
 import laser from "./laser";
+import logger from "./logging";
 import store from "./data_store";
 import settingsStore from "./settings_store";
 import { calculateArea } from "./calculate";
@@ -20,7 +23,8 @@ export default class Measurements extends React.Component {
       name: "",
       areaOutline: [],
       dialogVisible: false,
-      dialogHeight: 0.0
+      dialogHeight: 0.0,
+      measuring: false
     };
   }
 
@@ -79,18 +83,48 @@ export default class Measurements extends React.Component {
     );
   };
 
-  measureArea = async () => {
-    if (laser.ready) {
-      let areaOutline = await laser.measureOutline();
-      areaOutline = areaOutline.filter(
-        point => 0 < point["range"] && point["range"] < 20
-      );
-      this.setState({ areaOutline: areaOutline });
-      console.log({ area: calculateArea(areaOutline) });
+  measureAreaPoint = async () => {
+    if (usb.connected) {
+      const range = await laser.measure();
+      const point = await { angle: compass.angle, range: range };
+      logger.log(point);
+      if (range > 0) {
+        this.setState((prevState, props) => {
+          return { areaOutline: [...prevState.areaOutline, point] };
+        });
+      }
     }
   };
 
   render() {
+    const measure = (
+      <Button
+        rounded
+        title={"Measure Area"}
+        icon={{ name: "settings-overscan" }}
+        backgroundColor={usb.connected ? "#386" : "#999"}
+        onPress={() => {
+          this.setState({ measuring: true, areaOutline: [] });
+          this.interval = setInterval(() => {
+            this.measureAreaPoint();
+          }, 250);
+        }}
+      />
+    );
+
+    const done = (
+      <Button
+        rounded
+        title={"Done Measuring"}
+        icon={{ name: "settings-overscan" }}
+        backgroundColor={usb.connected ? "#836" : "#999"}
+        onPress={() => {
+          this.setState({ measuring: false });
+          clearInterval(this.interval);
+        }}
+      />
+    );
+
     return (
       <View style={{ flex: 1 }}>
         <Dialog.Container visible={this.state.dialogVisible}>
@@ -138,13 +172,7 @@ export default class Measurements extends React.Component {
                 backgroundColor="#55e"
                 onPress={() => this.logVolume()}
               />
-              <Button
-                rounded
-                title="Measure Area"
-                icon={{ name: "settings-overscan" }}
-                backgroundColor={laser.ready ? "#386" : "#999"}
-                onPress={async () => this.measureArea()}
-              />
+              {this.state.measuring ? done : measure}
             </View>
             <View style={{ flex: 1, justifyContent: "space-between" }}>
               <Button

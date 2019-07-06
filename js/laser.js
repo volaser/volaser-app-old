@@ -17,12 +17,16 @@ class Laser {
   measure = async () => {
     if (usb.connected) {
       const data = await usb.write("D\r\n");
-      return parseFloat(data);
+      if (data > 10000) {
+        return -1;
+      } else {
+        return parseFloat(data) / 100.0;
+      }
     }
   };
 
   measureOutline = async () => {
-    if (this.device !== null) {
+    if (usb.connected) {
       N = parseInt(settingsStore.settings.areaPoints);
       // const l = 4 + 1;
       angles = Array.from({ length: N + 1 }, (x, i) => i * (360 / N));
