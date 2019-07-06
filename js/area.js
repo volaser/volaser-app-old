@@ -1,10 +1,11 @@
 import React from "react";
-import Svg, { Polygon, Polyline } from "react-native-svg";
+import Svg, { Rect, Polygon, Polyline } from "react-native-svg";
 
 export default class Area extends React.Component {
   getAreaOutline() {
     if (this.props.points.length > 2) {
       return this.props.points
+        .slice()
         .sort((a, b) => a.angle - b.angle)
         .reduce((outline, point) => {
           let x = point.range * Math.cos((point.angle * Math.PI) / 180);
@@ -22,6 +23,7 @@ export default class Area extends React.Component {
         width={this.props.width}
         viewBox={this.props.viewBox}
       >
+        <Rect x="-50%" y="-50%" width="100%" height="100%" fill="#eee" />
         <Polygon
           points={this.getAreaOutline()}
           fill="#ccc"

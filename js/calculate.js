@@ -3,6 +3,7 @@ function calculateArea(outline) {
     return 0;
   }
   return outline
+    .slice()
     .sort((a, b) => a.angle - b.angle)
     .slice(0, -1)
     .reduce((area, point, index) => {
