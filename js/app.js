@@ -4,6 +4,7 @@ import {
   createMaterialTopTabNavigator
 } from "react-navigation";
 import { Icon } from "react-native-elements";
+import KeepAwake from "react-native-keep-awake";
 
 import Measurements from "./measure";
 import Data from "./data";
@@ -12,6 +13,9 @@ import Developer from "./dev";
 import Tutorial from "./tutorial";
 
 export default class App extends React.Component {
+  componentDidMount() {
+    KeepAwake.activate();
+  }
   render() {
     return <RootStackNavigator />;
   }

@@ -182,6 +182,7 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':react-native-keep-awake')
     compile project(':react-native-simple-compass')
     compile project(':react-native-serialport')
     implementation project(':react-native-svg')

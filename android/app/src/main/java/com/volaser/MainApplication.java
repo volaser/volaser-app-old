@@ -3,6 +3,7 @@ package com.volaser;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.corbt.keepawake.KCKeepAwakePackage;
 import com.reactlibrary.RNSimpleCompassPackage;
 import com.melihyarikkaya.rnserialport.RNSerialportPackage;
 import com.horcrux.svg.SvgPackage;
@@ -29,6 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new KCKeepAwakePackage(),
             new RNSimpleCompassPackage(),
             new RNSerialportPackage(),
             new SvgPackage(),
