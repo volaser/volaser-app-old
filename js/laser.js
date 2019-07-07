@@ -17,7 +17,7 @@ class Laser {
   measure = async () => {
     if (usb.connected) {
       const data = await usb.write("D\r\n");
-      if (data > 10000) {
+      if (data > 1000) {
         return -1;
       } else {
         return parseFloat(data) / 100.0;
