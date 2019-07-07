@@ -57,27 +57,27 @@ export default class DataCard extends React.Component {
 
     return (
       <View style={styles.container}>
-        <View style={{ flex: 6 }}>
-          <View style={styles.row}>
-            <Button
-              rounded
-              title="Delete"
-              icon={{ name: "delete" }}
-              backgroundColor="#ca343c"
-              onPress={() => this.delete(index)}
-            />
-          </View>
+        <View style={{ flex: 3 }}>
           <View style={{ margin: 20, alignItems: "flex-start" }}>
-            <Text>{dateFormat(time)}</Text>
-            <Text>
+            <Text style={{ fontSize: 24 }}>{dateFormat(time)}</Text>
+            <Text style={{ fontSize: 24 }}>
               {location == null
                 ? ""
                 : `GPS: ${location.latitude.toFixed(
                     3
                   )},${location.longitude.toFixed(3)}`}
             </Text>
-            <Text style={{ fontSize: 16 }}>Area: {area.toFixed(3)} m²</Text>
+            <Text style={{ fontSize: 24 }}>Area: {area.toFixed(3)} m²</Text>
           </View>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button
+            rounded
+            title="Delete"
+            icon={{ name: "delete" }}
+            backgroundColor="#ca343c"
+            onPress={() => this.delete(index)}
+          />
         </View>
         <View style={{ flexDirection: "row", flex: 4 }}>
           {location == null ? (
