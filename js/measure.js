@@ -113,7 +113,12 @@ export default class Measurements extends React.Component {
 
     return (
       <View style={{ flex: 1 }}>
-        <View style={styles.container}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "#fff"
+          }}
+        >
           <View style={{ flex: 1 }}>
             <FormInput
               placeholder="Location Name"
@@ -123,18 +128,35 @@ export default class Measurements extends React.Component {
               }}
             />
           </View>
-          <View style={{ flexDirection: "row", flex: 3 }}>
-            <View style={{ justifyContent: "space-between" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 2,
+              justifyContent: "space-evenly"
+            }}
+          >
+            <View
+              style={{ justifyContent: "space-evenly", alignItems: "center" }}
+            >
               <Button
                 rounded
-                title="Save Measurement"
+                title="Save"
                 icon={{ name: "loupe" }}
                 backgroundColor="#55e"
                 onPress={() => this.logMeasurement()}
               />
               {this.state.measuring ? done : measure}
+              <Text style={{ fontSize: 24 }}>
+                Area: {calculateArea(this.state.areaOutline).toFixed(2)} m²
+              </Text>
             </View>
-            <View style={{ flex: 1, justifyContent: "space-between" }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "space-evenly",
+                alignItems: "center"
+              }}
+            >
               <Button
                 rounded
                 title="Start Tutorial"
@@ -149,34 +171,25 @@ export default class Measurements extends React.Component {
                 backgroundColor="#5a5"
                 onPress={() => this.getLocation()}
               />
+              <Text style={{ fontSize: 24 }}>
+                {this.state.location == null
+                  ? "GPS:"
+                  : `GPS: ${this.state.location.latitude.toFixed(
+                      3
+                    )},${this.state.location.longitude.toFixed(3)}`}
+              </Text>
             </View>
           </View>
-          <View style={{ padding: 20, flex: 1 }}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                flex: 1
-              }}
-            >
-              <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16 }}>
-                  Area: {calculateArea(this.state.areaOutline).toFixed(2)} m²
-                </Text>
-                <Text>
-                  {this.state.location == null
-                    ? ""
-                    : `GPS: ${this.state.location.latitude.toFixed(
-                        3
-                      )},${this.state.location.longitude.toFixed(3)}`}
-                </Text>
-              </View>
-            </View>
-          </View>
+        </View>
+        <View
+          style={{
+            flex: 1
+          }}
+        >
           <Area
             points={this.state.areaOutline}
             width="100%"
-            height="30%"
+            height="100%"
             viewBox="-1.71 -4 8 8"
           />
         </View>
