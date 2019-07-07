@@ -52,46 +52,13 @@ export default class DataCard extends React.Component {
       latitude: 47.4182074,
       longitude: 8.505423
     });
-    const emptyDepth = navigation.getParam("emptyDepth", 0.0);
-    const probeDepth = navigation.getParam("probeDepth", 0.0);
-    const probeHeight = navigation.getParam("probeHeight", 0.0);
     const areaOutline = navigation.getParam("areaOutline", []);
     const area = calculateArea(areaOutline);
-    const emptyVolume = calculateArea(areaOutline) * emptyDepth;
-    const sludgeVolume =
-      calculateArea(areaOutline) *
-      (probeHeight - probeDepth - settingsStore.settings.probeOffset);
 
     return (
       <View style={styles.container}>
-        {/* <Dialog.Container visible={this.state.renameVisible}>
-          <Dialog.Title>Rename {name}?</Dialog.Title>
-          <Dialog.Input
-            style={{ borderBottomWidth: 0.5 }}
-            onChangeText={event => this.setState({ dialogName: event })}
-          />
-          <Dialog.Button
-            label="Cancel"
-            onPress={() => this.setState({ renameVisible: false })}
-          />
-          <Dialog.Button
-            label="Submit"
-            onPress={() =>
-              this.setState({
-                renameVisible: false
-              })
-            }
-          />
-        </Dialog.Container> */}
-
         <View style={{ flex: 6 }}>
           <View style={styles.row}>
-            <Button
-              rounded
-              title="Rename"
-              backgroundColor="#336699"
-              onPress={() => this.setState({ renameVisible: true })}
-            />
             <Button
               rounded
               title="Delete"
@@ -103,50 +70,41 @@ export default class DataCard extends React.Component {
           <View style={{ margin: 20, alignItems: "flex-start" }}>
             <Text>{dateFormat(time)}</Text>
             <Text>
-              GPS: {location.latitude},{location.longitude}
-            </Text>
-
-            <Text style={{ fontSize: 16 }}>
-              Empty Depth: {emptyDepth.toFixed(3)} m
-            </Text>
-            <Text style={{ fontSize: 16 }}>
-              Probe Depth: {probeDepth.toFixed(3)} m
+              {location == null
+                ? ""
+                : `GPS: ${location.latitude.toFixed(
+                    3
+                  )},${location.longitude.toFixed(3)}`}
             </Text>
             <Text style={{ fontSize: 16 }}>Area: {area.toFixed(3)} m²</Text>
-            <Text style={{ fontSize: 16 }}>
-              Probe Offset:{" "}
-              {parseFloat(settingsStore.settings.probeOffset).toFixed(3)} m
-            </Text>
-            <Text style={{ fontSize: 16 }}>
-              Empty Volume: {emptyVolume.toFixed(3)} m³
-            </Text>
-            <Text style={{ fontSize: 16 }}>
-              Sludge Volume: {sludgeVolume.toFixed(3)} m³
-            </Text>
           </View>
         </View>
         <View style={{ flexDirection: "row", flex: 4 }}>
-          <MapView
-            style={{ flex: 1 }}
-            zoomEnabled={false}
-            scrollEnabled={false}
-            rotateEnabled={false}
-            showsScale={true}
-            region={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-              latitudeDelta: 0.03,
-              longitudeDelta: 0.03
-            }}
-          >
-            <Marker
-              coordinate={{
+          {location == null ? (
+            <Text />
+          ) : (
+            <MapView
+              style={{ flex: 1 }}
+              zoomEnabled={false}
+              scrollEnabled={false}
+              rotateEnabled={false}
+              showsScale={true}
+              region={{
                 latitude: location.latitude,
-                longitude: location.longitude
+                longitude: location.longitude,
+                latitudeDelta: 0.03,
+                longitudeDelta: 0.03
               }}
-              title={name}
-            />
-          </MapView>
+            >
+              <Marker
+                coordinate={{
+                  latitude: location.latitude,
+                  longitude: location.longitude
+                }}
+                title={name}
+              />
+            </MapView>
+          )}
           <View style={{ flex: 1 }}>
             <Area
               points={areaOutline}
