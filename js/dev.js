@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Text, Button } from "react-native-elements";
+import { Text, Button, Icon } from "react-native-elements";
 import { observer } from "mobx-react";
 
 import laser from "./laser";
@@ -23,19 +23,36 @@ export default class Developer extends React.Component {
           <Button
             rounded
             title="Test Laser"
-            icon={{ name: "arrow-forward" }}
+            icon={{ name: "check-box" }}
             backgroundColor={usb.connected ? "#3a84fc" : "#999"}
             onPress={async () => {
               if (usb.connected) {
                 let range = await laser.measure();
-                logger.log(`Range: ${range}`);
+                let strength = await laser.strength();
+                let mode = await laser.mode();
+                logger.log(`Range: ${range} m`);
+                logger.log(`Strength: ${strength}`);
+                logger.log(`Mode: ${mode}`);
               }
             }}
           />
         </View>
         <View style={{ padding: 20 }}>
-          <Text>Compass: {compass.angle} degrees</Text>
-          <Text>USB: {usb.connected ? "Connected" : "Disconnected"} </Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={{ fontSize: 24, width: "75%" }}>
+              Compass: {compass.angle}°
+            </Text>
+            <View
+              style={{
+                transform: [{ rotate: `${360 - compass.angle}deg` }]
+              }}
+            >
+              <Icon name="location-arrow" type="font-awesome" size={48} />
+            </View>
+          </View>
+          <Text style={{ fontSize: 24 }}>
+            USB: {usb.connected ? "Connected" : "Disconnected"}{" "}
+          </Text>
         </View>
         <Console />
       </View>

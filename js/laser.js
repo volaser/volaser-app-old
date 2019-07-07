@@ -25,6 +25,20 @@ class Laser {
     }
   };
 
+  strength = async () => {
+    if (usb.connected) {
+      const data = await usb.write("S\r\n");
+      return parseInt(data);
+    }
+  };
+
+  mode = async () => {
+    if (usb.connected) {
+      const data = await usb.write("M\r\n");
+      return parseInt(data);
+    }
+  };
+
   measureOutline = async () => {
     if (usb.connected) {
       N = parseInt(settingsStore.settings.areaPoints);
