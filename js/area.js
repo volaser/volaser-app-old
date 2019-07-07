@@ -51,12 +51,12 @@ export default class Area extends React.Component {
         viewBox={this.props.viewBox}
         preserveAspectRatio="xMinYMin meet"
       >
-        {/* <Rect x="-50%" y="-50%" width="100%" height="100%" fill="url(#grid)" /> */}
         {xgrid}
         {ygrid}
         <Polygon
           points={this.getAreaOutline()}
           fill="#175a91"
+          fillOpacity="0.5"
           stroke="black"
           strokeWidth="0"
         />
