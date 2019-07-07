@@ -108,7 +108,7 @@ export default class Measurements extends React.Component {
     const done = (
       <Button
         rounded
-        title={"Done Measuring"}
+        title={"Done"}
         icon={{ name: "stop", type: "font-awesome" }}
         backgroundColor={usb.connected ? "#836" : "#999"}
         onPress={() => this.stopMeasureArea()}
@@ -151,7 +151,7 @@ export default class Measurements extends React.Component {
                 rounded
                 title="Get Location"
                 icon={{ name: "location-on" }}
-                backgroundColor="#5a5"
+                backgroundColor="rgb(197, 46, 190)"
                 onPress={() => this.getLocation()}
               />
             </View>
@@ -162,7 +162,7 @@ export default class Measurements extends React.Component {
                 title="Save"
                 width="50%"
                 icon={{ name: "save" }}
-                backgroundColor="#55e"
+                backgroundColor="rgb(40, 91, 187)"
                 onPress={() => this.logMeasurement()}
               />
             </View>
@@ -172,7 +172,7 @@ export default class Measurements extends React.Component {
                 rounded
                 title="Start Tutorial"
                 icon={{ name: "question", type: "font-awesome" }}
-                backgroundColor="#e55"
+                backgroundColor="rgb(223, 128, 128)"
                 onPress={() => this.props.navigation.navigate("Tutorial")}
               />
             </View>
