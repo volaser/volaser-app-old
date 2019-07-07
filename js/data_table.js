@@ -1,6 +1,6 @@
 import React from "react";
-import { ScrollView } from "react-native";
-import { List, ListItem, Button } from "react-native-elements";
+import { ScrollView, View } from "react-native";
+import { List, ListItem, Button, Icon } from "react-native-elements";
 import { observer } from "mobx-react";
 import dateFormat from "dateformat";
 
@@ -8,21 +8,28 @@ import styles from "./styles";
 import store from "./data_store";
 import { calculateArea } from "./calculate";
 
-import { probeOffset } from "./measure";
-
 @observer
 export default class DataTable extends React.Component {
   static navigationOptions = () => {
     return {
       title: "Data",
       headerRight: (
-        <Button
-          rounded
-          icon={{ name: "cloud-upload" }}
-          title="Export All Data"
-          backgroundColor="#337799"
-          onPress={() => store.export()}
-        />
+        <View style={{ flexDirection: "row" }}>
+          <Button
+            rounded
+            icon={{ name: "file-excel-o", type: "font-awesome" }}
+            title="CSV"
+            backgroundColor="#08580c"
+            onPress={() => store.exportCSV()}
+          />
+          <Button
+            rounded
+            icon={{ name: "cloud-upload" }}
+            title="Export"
+            backgroundColor="#337799"
+            onPress={() => store.export()}
+          />
+        </View>
       )
     };
   };

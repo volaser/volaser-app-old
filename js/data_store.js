@@ -1,4 +1,5 @@
 import { Share } from "react-native";
+import { parse } from "json2csv";
 import { action, observable } from "mobx";
 import asyncStore from "react-native-simple-store";
 import logger from "./logging";
@@ -88,6 +89,24 @@ class Store {
         title: "All Volaser Data"
       });
     }
+  }
+
+  exportCSV() {
+    Share.share({
+      message: parse(
+        this.list.map(item => {
+          return {
+            name: item.item.name,
+            time: item.item.time,
+            area: item.item.area.toFixed(3),
+            longitude: item.item.location.longitude,
+            latitude: item.item.location.latitude
+          };
+        }),
+        { fields: ["name", "time", "longitude", "latitude", "area"] }
+      ),
+      title: "Volaser CSV Data"
+    });
   }
 }
 
