@@ -37,6 +37,7 @@ export default class Measurements extends React.Component {
 
   getLocation = async () => {
     const position = await this.getCurrentPosition();
+    logger.log(`getting location: ${position.coords.latitude}`);
     this.setState({ location: position.coords });
   };
 
@@ -98,7 +99,7 @@ export default class Measurements extends React.Component {
       <Button
         rounded
         title={"Measure Area"}
-        icon={{ name: "settings-overscan" }}
+        icon={{ name: "play", type: "font-awesome" }}
         backgroundColor={usb.connected ? "#386" : "#999"}
         onPress={() => this.startMeasureArea()}
       />
@@ -108,7 +109,7 @@ export default class Measurements extends React.Component {
       <Button
         rounded
         title={"Done Measuring"}
-        icon={{ name: "settings-overscan" }}
+        icon={{ name: "stop", type: "font-awesome" }}
         backgroundColor={usb.connected ? "#836" : "#999"}
         onPress={() => this.stopMeasureArea()}
       />
@@ -119,7 +120,9 @@ export default class Measurements extends React.Component {
         <View
           style={{
             flex: 1,
-            backgroundColor: "#fff"
+            height: "50%",
+            backgroundColor: "white",
+            padding: "5%"
           }}
         >
           <View style={{ flex: 1 }}>
@@ -131,42 +134,19 @@ export default class Measurements extends React.Component {
               }}
             />
           </View>
+
           <View
             style={{
               flexDirection: "row",
-              flex: 2,
-              justifyContent: "space-evenly"
+              flexWrap: "wrap",
+              flex: 2
             }}
           >
-            <View
-              style={{ justifyContent: "space-evenly", alignItems: "center" }}
-            >
-              <Button
-                rounded
-                title="Save"
-                icon={{ name: "loupe" }}
-                backgroundColor="#55e"
-                onPress={() => this.logMeasurement()}
-              />
+            <View style={{ width: "50%", marginBottom: "5%" }}>
               {this.state.measuring ? done : measure}
-              <Text style={{ fontSize: 24 }}>
-                Area: {calculateArea(this.state.areaOutline).toFixed(2)} m²
-              </Text>
             </View>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "space-evenly",
-                alignItems: "center"
-              }}
-            >
-              <Button
-                rounded
-                title="Start Tutorial"
-                icon={{ name: "location-on" }}
-                backgroundColor="#e55"
-                onPress={() => this.props.navigation.navigate("Tutorial")}
-              />
+
+            <View style={{ width: "50%", marginBottom: "5%" }}>
               <Button
                 rounded
                 title="Get Location"
@@ -174,26 +154,60 @@ export default class Measurements extends React.Component {
                 backgroundColor="#5a5"
                 onPress={() => this.getLocation()}
               />
-              <Text style={{ fontSize: 24 }}>
-                {this.state.location == null
-                  ? "GPS:"
-                  : `GPS: ${this.state.location.latitude.toFixed(
-                      3
-                    )},${this.state.location.longitude.toFixed(3)}`}
-              </Text>
             </View>
+
+            <View style={{ width: "50%", marginBottom: "5%" }}>
+              <Button
+                rounded
+                title="Save"
+                width="50%"
+                icon={{ name: "save" }}
+                backgroundColor="#55e"
+                onPress={() => this.logMeasurement()}
+              />
+            </View>
+
+            <View style={{ width: "50%", marginBottom: "5%" }}>
+              <Button
+                rounded
+                title="Start Tutorial"
+                icon={{ name: "question", type: "font-awesome" }}
+                backgroundColor="#e55"
+                onPress={() => this.props.navigation.navigate("Tutorial")}
+              />
+            </View>
+          </View>
+
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between"
+            }}
+          >
+            <Text style={{ fontSize: 18, width: "50%", padding: "5%" }}>
+              Area: {calculateArea(this.state.areaOutline).toFixed(2)} m²
+            </Text>
+            <Text style={{ fontSize: 16, width: "50%", padding: "5%" }}>
+              {this.state.location == null
+                ? "GPS:"
+                : `GPS: ${this.state.location.latitude.toFixed(
+                    1
+                  )}°N, ${this.state.location.longitude.toFixed(1)}°E`}
+            </Text>
           </View>
         </View>
         <View
           style={{
-            flex: 1
+            height: "50%",
+            backgroundColor: "white"
           }}
         >
           <Area
             points={this.state.areaOutline}
             width="100%"
             height="100%"
-            viewBox="-1.71 -4 8 8"
+            viewBox="-4 -4 8 8"
           />
         </View>
       </View>
