@@ -35,10 +35,10 @@ export default class DataTable extends React.Component {
           <ListItem
             key={key}
             title={elem.item.name}
-            subtitle={`${dateFormat(elem.item.time, "mmm d, HH:MM")},  ${(
-              calculateArea(elem.item.outline) *
-              (elem.item.probeHeight - elem.item.probeDepth - probeOffset)
-            ).toFixed(3)} m³`}
+            subtitle={`${dateFormat(
+              elem.item.time,
+              "mmm d, HH:MM"
+            )},  ${calculateArea(elem.item.areaOutline).toFixed(2)} m²`}
             onPress={() =>
               this.props.navigation.navigate("DataCard", {
                 ...elem.item,
