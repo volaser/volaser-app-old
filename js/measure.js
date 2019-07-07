@@ -20,6 +20,7 @@ export default class Measurements extends React.Component {
     super(props);
     this.state = {
       name: "",
+      location: null,
       areaOutline: [],
       dialogVisible: false,
       dialogHeight: 0.0,
@@ -35,28 +36,19 @@ export default class Measurements extends React.Component {
     });
   };
 
-  addLocation = async () => {
+  getLocation = async () => {
     const position = await this.getCurrentPosition();
-    store.push({
-      name: this.state.name,
-      location: position.coords,
-      time: Date()
-    });
+    this.setState({ location: position.coords });
   };
 
   logMeasurement = async () => {
     let dataPoint = {
       name: this.state.name,
+      location: this.state.location,
       time: Date(),
       areaOutline: this.state.areaOutline,
       area: calculateArea(this.state.areaOutline)
     };
-    try {
-      const position = await this.getCurrentPosition();
-      dataPoint.location = position.coords;
-    } catch {
-      logger.log("timeout getting position");
-    }
     store.push(dataPoint);
     Alert.alert(
       "Data point saved",
@@ -150,6 +142,13 @@ export default class Measurements extends React.Component {
                 backgroundColor="#e55"
                 onPress={() => this.props.navigation.navigate("Tutorial")}
               />
+              <Button
+                rounded
+                title="Get Location"
+                icon={{ name: "location-on" }}
+                backgroundColor="#5a5"
+                onPress={() => this.getLocation()}
+              />
             </View>
           </View>
           <View style={{ padding: 20, flex: 1 }}>
@@ -163,6 +162,13 @@ export default class Measurements extends React.Component {
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 16 }}>
                   Area: {calculateArea(this.state.areaOutline).toFixed(2)} m²
+                </Text>
+                <Text>
+                  {this.state.location == null
+                    ? ""
+                    : `GPS: ${this.state.location.latitude.toFixed(
+                        3
+                      )},${this.state.location.longitude.toFixed(3)}`}
                 </Text>
               </View>
             </View>
