@@ -12,7 +12,6 @@ import logger from "./logging";
 import store from "./data_store";
 import settingsStore from "./settings_store";
 import { calculateArea } from "./calculate";
-import styles from "./styles";
 
 @observer
 export default class Measurements extends React.Component {
@@ -60,10 +59,14 @@ export default class Measurements extends React.Component {
   };
 
   startMeasureArea() {
-    this.setState({ measuring: true, areaOutline: [] });
-    this.interval = setInterval(() => {
-      this.measureAreaPoint();
-    }, 100);
+    const period = settingsStore.settings.measurementPeriod;
+    logger.log(`measurement period: ${period} ms`);
+    if (usb.connected) {
+      this.setState({ measuring: true, areaOutline: [] });
+      this.interval = setInterval(() => {
+        this.measureAreaPoint();
+      }, period);
+    }
   }
 
   stopMeasureArea() {

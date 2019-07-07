@@ -5,10 +5,7 @@ import logger from "./logging";
 class SettingsStore {
   @observable
   settings = {
-    areaPoints: 20,
-    groupLocations: false,
-    probeOffset: 0.53,
-    laserOffset: 0.02
+    measurementPeriod: 250
   };
 
   constructor() {
@@ -19,11 +16,12 @@ class SettingsStore {
   refreshSettings = async () => {
     try {
       const asyncStorage = await asyncStore.get("settings");
+
       if (asyncStorage != null) {
         this.settings = { ...this.settings, ...asyncStorage.settings };
       }
     } catch (err) {
-      logger.log("Could not lad settings, using defaults: " + err);
+      logger.log("Could not load settings, using defaults: " + err);
     }
   };
 

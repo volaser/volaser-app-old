@@ -1,7 +1,7 @@
 import React from "react";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 import Dialog from "react-native-dialog";
-import { Icon, Text, List, ListItem, CheckBox } from "react-native-elements";
+import { Text, List, ListItem, Slider } from "react-native-elements";
 
 import styles from "./styles";
 import { observer } from "mobx-react";
@@ -13,6 +13,8 @@ export default class Settings extends React.Component {
     return <SettingsList />;
   }
 }
+
+@observer
 class SettingsList extends React.Component {
   render() {
     const settings = settingsStore.settings;
@@ -20,72 +22,64 @@ class SettingsList extends React.Component {
       <View style={styles.container}>
         <List>
           <SettingsItem
-            title="Number of area points"
-            subtitle="This is the number of points the laser takes when measuring area"
-            value={settings.areaPoints}
-            onChange={newVal => settingsStore.update({ areaPoints: newVal })}
-          />
-
-          <SettingsItem
-            title="Probe offset"
-            subtitle="This is the distance in meters between the probe reference point and the tip of the laser when in the home position."
-            units="m"
-            value={settings.probeOffset}
-            onChange={newVal => settingsStore.update({ probeOffset: newVal })}
-          />
-
-          <SettingsItem
-            title="Laser offset"
-            subtitle="This is the distance in meters between the horizontal laser and the axis of rotation."
-            units="m"
-            value={settings.laserOffset}
-            onChange={newVal => settingsStore.update({ laserOffset: newVal })}
-          />
-
-          {/* <ListItem
-            title="Group data points by location"
-            rightIcon={
-              <CheckBox
-                containerStyle={{
-                  backgroundColor: "#fff",
-                  padding: 0,
-                  borderWidth: 0
-                }}
-                checked={settingsStore.settings.groupLocations}
-                onPress={() =>
-                  (settingsStore.settings.groupLocations = !settingsStore
-                    .settings.groupLocations)
-                }
-              />
+            slider
+            maximum={2000}
+            minimum={100}
+            title="Measurement period"
+            subtitle="This is the time in milliseconds between laser measurements"
+            units="ms"
+            value={settings.measurementPeriod}
+            onChange={newVal =>
+              settingsStore.update({ measurementPeriod: parseInt(newVal) })
             }
-          /> */}
+          />
         </List>
       </View>
     );
   }
 }
 
-@observer
 class SettingsItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       dialogVisible: false,
-      value: this.props.value.toString()
+      value: this.props.value
     };
   }
 
   render() {
     const units = this.props.units == null ? "" : ` (${this.props.units})`;
+    let input = "";
+    if (this.props.slider != undefined) {
+      input = (
+        <View style={{ justifyContent: "center" }}>
+          <Slider
+            minimumValue={this.props.minimum}
+            maximumValue={this.props.maximum}
+            value={this.state.value}
+            onValueChange={value =>
+              this.setState({ value: parseInt(value / 50) * 50 })
+            }
+          />
+          <Text>Value: {this.state.value + this.props.units}</Text>
+        </View>
+      );
+    } else {
+      input = (
+        <Dialog.Input
+          style={{ borderBottomWidth: 0.5 }}
+          placeholder={this.state.value.toString()}
+          onChangeText={event => this.setState({ value: event })}
+        />
+      );
+    }
     return (
       <View>
         <Dialog.Container visible={this.state.dialogVisible}>
           <Dialog.Title>{this.props.title}</Dialog.Title>
           <Dialog.Description>{this.props.subtitle}</Dialog.Description>
-          <Dialog.Input
-            style={{ borderBottomWidth: 0.5 }}
-            onChangeText={event => this.setState({ value: event })}
-          />
+          {input}
           <Dialog.Button
             label="Cancel"
             onPress={() => this.setState({ dialogVisible: false })}
@@ -100,9 +94,9 @@ class SettingsItem extends React.Component {
         </Dialog.Container>
         <ListItem
           title={this.props.title}
-          rightTitle={this.state.value + units}
+          rightTitle={this.props.value + units}
           onPress={() => {
-            this.setState({ dialogVisible: true });
+            this.setState({ dialogVisible: true, value: this.props.value });
           }}
         />
       </View>
