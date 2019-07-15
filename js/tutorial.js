@@ -53,7 +53,7 @@ export default class TutorialOnBoard extends React.Component {
             image: <AreaPage />,
             title: "Measure Tank Area",
             subtitle:
-              "Insert the laser into the tank. Start the measurement, and begin turning the unit in a full circle to measure the entire area. Once you are done, Stop the measurement."
+              "Insert the laser into the tank. Start the measurement, and begin turning the unit in a full circle to measure the entire area. Once you are done, stop the measurement."
           },
           {
             backgroundColor: "#118ec6",
