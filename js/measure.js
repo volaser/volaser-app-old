@@ -153,7 +153,7 @@ export default class Measurements extends React.Component {
                 backgroundColor: "#dfdfdf",
                 paddingLeft: "5%",
                 padding: "2%",
-                color: this.state.name == "" ? "#555" : "black"
+                color: this.state.name == "" ? "#aaa" : "black"
               }}
               onPress={() => this.showNameDialog(true)}
             >
