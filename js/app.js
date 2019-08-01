@@ -9,7 +9,7 @@ import KeepAwake from "react-native-keep-awake";
 import Measurements from "./measure";
 import Data from "./data";
 import Settings from "./settings";
-import Developer from "./dev";
+import Debug from "./dev";
 import Tutorial from "./tutorial";
 
 export default class App extends React.Component {
@@ -61,12 +61,12 @@ const RootTabsNavigator = createMaterialTopTabNavigator(
         )
       }
     },
-    Developer: {
-      screen: Developer,
+    Debug: {
+      screen: Debug,
       navigationOptions: {
-        title: "Dev",
+        title: "Debug",
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="developer-mode" color={tintColor} />
+          <Icon name="bug" type="font-awesome" color={tintColor} />
         )
       }
     }

@@ -17,7 +17,7 @@ export default class DataTable extends React.Component {
         <View style={{ flexDirection: "row" }}>
           <Button
             rounded
-            icon={{ name: "file-excel-o", type: "font-awesome" }}
+            icon={{ name: "file-text-o", type: "font-awesome" }}
             title="CSV"
             backgroundColor="#08580c"
             onPress={() => store.exportCSV()}
@@ -45,7 +45,9 @@ export default class DataTable extends React.Component {
             subtitle={`${dateFormat(
               elem.item.time,
               "mmm d, HH:MM"
-            )},  ${calculateArea(elem.item.areaOutline).toFixed(2)} m²`}
+            )},  Area: ${calculateArea(elem.item.areaOutline).toFixed(
+              2
+            )} m²,  Depth: ${elem.item.sludgeDepth} m`}
             onPress={() =>
               this.props.navigation.navigate("DataCard", {
                 ...elem.item,

@@ -78,7 +78,7 @@ export default class DataCard extends React.Component {
             </Text>
           </View>
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, marginLeft: "25%", marginRight: "25%" }}>
           <Button
             rounded
             title="Delete"

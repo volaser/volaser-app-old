@@ -24,6 +24,7 @@ export default class Measurements extends React.Component {
       areaOutline: [],
       sludgeDepth: 0.0,
       bottomDepth: 0.0,
+      nameDialogVisible: false,
       bottomDialogVisible: false,
       measuring: false
     };
@@ -112,6 +113,10 @@ export default class Measurements extends React.Component {
     }
   };
 
+  showNameDialog(visible) {
+    this.setState({ nameDialogVisible: visible });
+  }
+
   showBottomDialog(visible) {
     this.setState({ bottomDialogVisible: visible });
   }
@@ -129,18 +134,31 @@ export default class Measurements extends React.Component {
           <View
             style={{
               flex: 1,
-              backgroundColor: "#dfdfdf",
+              justifyContent: "center",
               marginTop: "2%",
               marginBottom: "4%"
             }}
           >
-            <FormInput
+            {/* <FormInput
               placeholder="Location Name"
               onFocus={event => this.setState({ name: "" })}
               onChangeText={event => {
                 this.setState({ name: event });
               }}
-            />
+              style={{ color: "black" }}
+            /> */}
+            <Text
+              style={{
+                fontSize: 24,
+                backgroundColor: "#dfdfdf",
+                paddingLeft: "5%",
+                padding: "2%",
+                color: this.state.name == "" ? "#555" : "black"
+              }}
+              onPress={() => this.showNameDialog(true)}
+            >
+              {this.state.name == "" ? "Location Name" : this.state.name}
+            </Text>
           </View>
 
           <View
@@ -173,10 +191,10 @@ export default class Measurements extends React.Component {
             <View style={{ width: "50%", marginBottom: "2%" }}>
               <Button
                 rounded
-                title="Get Location"
-                icon={{ name: "location-on" }}
-                backgroundColor="rgb(197, 46, 190)"
-                onPress={() => this.getLocation()}
+                title="Start Tutorial"
+                icon={{ name: "question", type: "font-awesome" }}
+                backgroundColor="rgb(223, 128, 128)"
+                onPress={() => this.props.navigation.navigate("Tutorial")}
               />
             </View>
 
@@ -194,10 +212,10 @@ export default class Measurements extends React.Component {
             <View style={{ width: "50%", marginBottom: "2%" }}>
               <Button
                 rounded
-                title="Start Tutorial"
-                icon={{ name: "question", type: "font-awesome" }}
-                backgroundColor="rgb(223, 128, 128)"
-                onPress={() => this.props.navigation.navigate("Tutorial")}
+                title="Get Location"
+                icon={{ name: "location-on" }}
+                backgroundColor="rgb(197, 46, 190)"
+                onPress={() => this.getLocation()}
               />
             </View>
 
@@ -290,7 +308,29 @@ export default class Measurements extends React.Component {
         </View>
 
         <DialogInput
-          isDialogVisible={this.state.bottomDialogVisible}
+          isDialogVisible={
+            this.state.nameDialogVisible &&
+            this.state.nameDialogVisible != undefined
+          }
+          title={"Location Name"}
+          message={
+            "Please the name of the location you are surveying, so you can identify it in your records later."
+          }
+          hintInput={"Location Name"}
+          submitInput={inputText => {
+            this.setState({ name: inputText });
+            this.showNameDialog(false);
+          }}
+          closeDialog={() => {
+            this.showNameDialog(false);
+          }}
+        />
+
+        <DialogInput
+          isDialogVisible={
+            this.state.bottomDialogVisible &&
+            this.state.bottomDialogVisible != undefined
+          }
           title={"Distance to bottom"}
           message={
             "Please enter the distance to the bottom of the containment as measured with the probe, in meters."
