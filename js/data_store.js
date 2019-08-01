@@ -98,12 +98,24 @@ class Store {
           return {
             name: item.item.name,
             time: item.item.time,
-            area: item.item.area.toFixed(3),
-            longitude: item.item.location.longitude,
-            latitude: item.item.location.latitude
+            area: parseFloat(item.item.area.toFixed(3)),
+            sludge_depth: item.item.sludgeDepth,
+            bottom_depth: item.item.bottomDepth,
+            longitude: parseFloat(item.item.location.longitude.toFixed(3)),
+            latitude: parseFloat(item.item.location.latitude.toFixed(3))
           };
         }),
-        { fields: ["name", "time", "longitude", "latitude", "area"] }
+        {
+          fields: [
+            "name",
+            "time",
+            "longitude",
+            "latitude",
+            "area",
+            "sludge_depth",
+            "bottom_depth"
+          ]
+        }
       ),
       title: "Volaser CSV Data"
     });

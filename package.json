@@ -19,6 +19,7 @@
     "react-native": "0.57.1",
     "react-native-ble-plx": "^1.0.0",
     "react-native-dialog": "^5.4.0",
+    "react-native-dialog-input": "^1.0.7",
     "react-native-elements": "^0.19.1",
     "react-native-keep-awake": "^4.0.0",
     "react-native-maps": "^0.22.0",

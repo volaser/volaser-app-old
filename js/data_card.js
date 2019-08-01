@@ -54,20 +54,28 @@ export default class DataCard extends React.Component {
     });
     const areaOutline = navigation.getParam("areaOutline", []);
     const area = calculateArea(areaOutline);
+    const sludgeDepth = navigation.getParam("sludgeDepth", 0);
+    const bottomDepth = navigation.getParam("bottomDepth", 0);
 
     return (
       <View style={styles.container}>
         <View style={{ flex: 3 }}>
           <View style={{ margin: 20, alignItems: "flex-start" }}>
-            <Text style={{ fontSize: 24 }}>{dateFormat(time)}</Text>
-            <Text style={{ fontSize: 24 }}>
+            <Text style={{ fontSize: 18 }}>{dateFormat(time)}</Text>
+            <Text style={{ fontSize: 18 }}>
               {location == null
                 ? ""
                 : `GPS: ${location.latitude.toFixed(
                     3
-                  )},${location.longitude.toFixed(3)}`}
+                  )}°N, ${location.longitude.toFixed(3)}°E`}
             </Text>
-            <Text style={{ fontSize: 24 }}>Area: {area.toFixed(3)} m²</Text>
+            <Text style={{ fontSize: 18 }}>Area: {area.toFixed(2)} m²</Text>
+            <Text style={{ fontSize: 18 }}>
+              Distance to sludge: {sludgeDepth.toFixed(2)} m²
+            </Text>
+            <Text style={{ fontSize: 18 }}>
+              Distance to bottom: {bottomDepth.toFixed(2)} m²
+            </Text>
           </View>
         </View>
         <View style={{ flex: 1 }}>

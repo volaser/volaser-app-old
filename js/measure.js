@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Alert } from "react-native";
 import { Button, FormInput, Text } from "react-native-elements";
+import DialogInput from "react-native-dialog-input";
 
 import Area from "./area";
 import { observer } from "mobx-react";
@@ -21,8 +22,9 @@ export default class Measurements extends React.Component {
       name: "",
       location: null,
       areaOutline: [],
-      dialogVisible: false,
-      dialogHeight: 0.0,
+      sludgeDepth: 0.0,
+      bottomDepth: 0.0,
+      bottomDialogVisible: false,
       measuring: false
     };
   }
@@ -37,7 +39,11 @@ export default class Measurements extends React.Component {
 
   getLocation = async () => {
     const position = await this.getCurrentPosition();
-    logger.log(`getting location: ${position.coords.latitude}`);
+    logger.log(
+      `GPS location: ${position.coords.latitude.toFixed(
+        1
+      )}°N, ${position.coords.longitude.toFixed(1)}°E`
+    );
     this.setState({ location: position.coords });
   };
 
@@ -47,7 +53,9 @@ export default class Measurements extends React.Component {
       location: this.state.location,
       time: Date(),
       areaOutline: this.state.areaOutline,
-      area: calculateArea(this.state.areaOutline)
+      area: calculateArea(this.state.areaOutline),
+      sludgeDepth: this.state.sludgeDepth,
+      bottomDepth: this.state.bottomDepth
     };
     store.push(dataPoint);
     Alert.alert(
@@ -94,38 +102,38 @@ export default class Measurements extends React.Component {
     }
   };
 
+  measureDepth = async () => {
+    if (usb.connected) {
+      const range = await laser.measure();
+      if (range > 0) {
+        logger.log(`Depth: ${range}`);
+        this.setState({ sludgeDepth: range });
+      }
+    }
+  };
+
+  showBottomDialog(visible) {
+    this.setState({ bottomDialogVisible: visible });
+  }
+
   render() {
-    const measure = (
-      <Button
-        rounded
-        title={"Measure Area"}
-        icon={{ name: "play", type: "font-awesome" }}
-        backgroundColor={usb.connected ? "#386" : "#999"}
-        onPress={() => this.startMeasureArea()}
-      />
-    );
-
-    const done = (
-      <Button
-        rounded
-        title={"Done"}
-        icon={{ name: "stop", type: "font-awesome" }}
-        backgroundColor={usb.connected ? "#836" : "#999"}
-        onPress={() => this.stopMeasureArea()}
-      />
-    );
-
     return (
       <View style={{ flex: 1 }}>
         <View
           style={{
             flex: 1,
             height: "50%",
-            backgroundColor: "white",
-            padding: "5%"
+            backgroundColor: "white"
           }}
         >
-          <View style={{ flex: 1 }}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: "#dfdfdf",
+              marginTop: "2%",
+              marginBottom: "4%"
+            }}
+          >
             <FormInput
               placeholder="Location Name"
               onFocus={event => this.setState({ name: "" })}
@@ -139,14 +147,30 @@ export default class Measurements extends React.Component {
             style={{
               flexDirection: "row",
               flexWrap: "wrap",
-              flex: 2
+              flex: 3
             }}
           >
-            <View style={{ width: "50%", marginBottom: "5%" }}>
-              {this.state.measuring ? done : measure}
+            <View style={{ width: "50%", marginBottom: "2%" }}>
+              {this.state.measuring ? (
+                <Button
+                  rounded
+                  title={"Done"}
+                  icon={{ name: "stop", type: "font-awesome" }}
+                  backgroundColor={usb.connected ? "#836" : "#999"}
+                  onPress={() => this.stopMeasureArea()}
+                />
+              ) : (
+                <Button
+                  rounded
+                  title={"Measure Area"}
+                  icon={{ name: "play", type: "font-awesome" }}
+                  backgroundColor={usb.connected ? "#386" : "#999"}
+                  onPress={() => this.startMeasureArea()}
+                />
+              )}
             </View>
 
-            <View style={{ width: "50%", marginBottom: "5%" }}>
+            <View style={{ width: "50%", marginBottom: "2%" }}>
               <Button
                 rounded
                 title="Get Location"
@@ -156,7 +180,7 @@ export default class Measurements extends React.Component {
               />
             </View>
 
-            <View style={{ width: "50%", marginBottom: "5%" }}>
+            <View style={{ width: "50%", marginBottom: "2%" }}>
               <Button
                 rounded
                 title="Save"
@@ -167,7 +191,7 @@ export default class Measurements extends React.Component {
               />
             </View>
 
-            <View style={{ width: "50%", marginBottom: "5%" }}>
+            <View style={{ width: "50%", marginBottom: "2%" }}>
               <Button
                 rounded
                 title="Start Tutorial"
@@ -176,24 +200,78 @@ export default class Measurements extends React.Component {
                 onPress={() => this.props.navigation.navigate("Tutorial")}
               />
             </View>
+
+            <View style={{ width: "50%", marginBottom: "2%" }}>
+              <Button
+                rounded
+                titleProps={{ style: { fontSize: 5 } }}
+                title="Measure Sludge"
+                icon={{
+                  name: "chevron-double-down",
+                  type: "material-community"
+                }}
+                backgroundColor={usb.connected ? "#386" : "#999"}
+                onPress={() => this.measureDepth()}
+              />
+            </View>
+
+            <View style={{ width: "50%", marginBottom: "2%" }}>
+              <Button
+                rounded
+                title="Record Depth"
+                icon={{ name: "clipboard-check", type: "material-community" }}
+                backgroundColor="rgb(50, 149, 206)"
+                onPress={() => this.showBottomDialog(true)}
+              />
+            </View>
           </View>
 
           <View
             style={{
               flex: 1,
-              flexDirection: "row",
-              justifyContent: "space-between"
+              flexWrap: "wrap",
+              justifyContent: "center"
             }}
           >
-            <Text style={{ fontSize: 18, width: "50%", padding: "5%" }}>
+            <Text
+              style={{
+                fontSize: 14,
+                width: "50%",
+                paddingLeft: "4%"
+              }}
+            >
               Area: {calculateArea(this.state.areaOutline).toFixed(2)} m²
             </Text>
-            <Text style={{ fontSize: 16, width: "50%", padding: "5%" }}>
+            <Text
+              style={{
+                fontSize: 14,
+                width: "50%",
+                paddingLeft: "4%"
+              }}
+            >
+              {`Distance to sludge: ${this.state.sludgeDepth.toFixed(2)} m`}
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                width: "50%",
+                paddingLeft: "4%"
+              }}
+            >
               {this.state.location == null
                 ? "GPS:"
                 : `GPS: ${this.state.location.latitude.toFixed(
                     1
                   )}°N, ${this.state.location.longitude.toFixed(1)}°E`}
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                width: "50%",
+                paddingLeft: "4%"
+              }}
+            >
+              {`Distance to bottom: ${this.state.bottomDepth.toFixed(2)} m`}
             </Text>
           </View>
         </View>
@@ -210,6 +288,25 @@ export default class Measurements extends React.Component {
             viewBox="-4 -4 8 8"
           />
         </View>
+
+        <DialogInput
+          isDialogVisible={this.state.bottomDialogVisible}
+          title={"Distance to bottom"}
+          message={
+            "Please enter the distance to the bottom of the containment as measured with the probe, in meters."
+          }
+          hintInput={this.state.bottomDepth.toFixed(2) + " m"}
+          textInputProps={{ autoCorrect: false, clearTextOnFocus: true }}
+          submitInput={inputText => {
+            if (!isNaN(parseFloat(inputText))) {
+              this.setState({ bottomDepth: parseFloat(inputText) });
+            }
+            this.showBottomDialog(false);
+          }}
+          closeDialog={() => {
+            this.showBottomDialog(false);
+          }}
+        />
       </View>
     );
   }
