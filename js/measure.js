@@ -139,17 +139,9 @@ export default class Measurements extends React.Component {
               marginBottom: "4%"
             }}
           >
-            {/* <FormInput
-              placeholder="Location Name"
-              onFocus={event => this.setState({ name: "" })}
-              onChangeText={event => {
-                this.setState({ name: event });
-              }}
-              style={{ color: "black" }}
-            /> */}
             <Text
               style={{
-                fontSize: 24,
+                fontSize: 20,
                 backgroundColor: "#dfdfdf",
                 paddingLeft: "5%",
                 padding: "2%",
@@ -157,7 +149,7 @@ export default class Measurements extends React.Component {
               }}
               onPress={() => this.showNameDialog(true)}
             >
-              {this.state.name == "" ? "Location Name" : this.state.name}
+              {this.state.name == "" ? "Sample Name" : this.state.name}
             </Text>
           </View>
 
@@ -289,7 +281,7 @@ export default class Measurements extends React.Component {
                 paddingLeft: "4%"
               }}
             >
-              {`Distance to bottom: ${this.state.bottomDepth.toFixed(2)} m`}
+              {`to bottom: ${this.state.bottomDepth.toFixed(2)} m`}
             </Text>
           </View>
         </View>
@@ -312,11 +304,11 @@ export default class Measurements extends React.Component {
             this.state.nameDialogVisible &&
             this.state.nameDialogVisible != undefined
           }
-          title={"Location Name"}
+          title={"Sample Name"}
           message={
-            "Please the name of the location you are surveying, so you can identify it in your records later."
+            "Please enter the name of the sample you are measuring, so you can identify it in your records later."
           }
-          hintInput={"Location Name"}
+          hintInput={"Sample Name"}
           submitInput={inputText => {
             this.setState({ name: inputText });
             this.showNameDialog(false);
