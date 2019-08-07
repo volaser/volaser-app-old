@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Alert } from "react-native";
-import { Button, FormInput, Text } from "react-native-elements";
+import { Button, Text } from "react-native-elements";
 import DialogInput from "react-native-dialog-input";
 
 import Area from "./area";
