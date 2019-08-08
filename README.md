@@ -6,7 +6,7 @@ Because the app uses USB Serial to communicate with the laser, there is currentl
 
 
 ## Screenshots
-![Screenshot](img/Screenshot_20190804-192129.png)
+<img alt="Screenshot" src="img/Screenshot_20190804-192129.png" width="50%">
 
 ## Build Instructions
 
