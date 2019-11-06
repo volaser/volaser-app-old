@@ -18,6 +18,7 @@ class Laser {
     if (usb.connected) {
       const data = await usb.write("D\r\n");
       if (data > 1000) {
+        logger.log(`Invalid laser measurement: ${parseInt(data)}`);
         return -1;
       } else {
         return parseFloat(data) / 100.0;

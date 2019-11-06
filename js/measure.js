@@ -109,6 +109,12 @@ export default class Measurements extends React.Component {
       if (range > 0) {
         logger.log(`Depth: ${range}`);
         this.setState({ sludgeDepth: range });
+      } else {
+        Alert.alert(
+          "Invalid Laser Measurement",
+          "Unfortunately, the laser is returning an invalid measurement. Try retargeting the laser at a closer surface, or one with different surface characteristics.",
+          [{ text: "OK" }]
+        );
       }
     }
   };

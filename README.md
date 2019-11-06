@@ -6,7 +6,7 @@ Because the app uses USB Serial to communicate with the laser, there is currentl
 
 
 ## Screenshots
-![Screenshot](img/Screenshot_20190804-192129.png)
+![Screenshot | width=50](img/Screenshot_20190804-192129.png)
 
 ## Build Instructions
 
@@ -16,7 +16,7 @@ To build the app you will need node installed to run npm install to install the 
 npm install
 ```
 
-Then to build for android and push to an attached phone run
+Then to build for android and push to an attached phone, in the folder 'android' run:
 
 ```
 ./gradlew bundleRelease
